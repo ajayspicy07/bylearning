@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block own_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'post/styles/createpost.css' %}">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
+{% endblock own_css %}
+
+
+{% block upper_js %}
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+
+    <script>
+        tinymce.init({selector:'.tinymce',
+            height : 400,
+            max_height: 400,
+            min_height: 400,
+    
+            plugins: ' preview paste importcss searchreplace autolink autosave save directionality  visualblocks visualchars fullscreen image link  codesample table charmap hr pagebreak nonbreaking  toc advlist lists wordcount imagetools  noneditable  charmap anchor',
+        
+            plugin_preview_width : "400", //This do the trick
+            plugin_preview_height : "600",
+
+    
+            toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | backcolor alignleft aligncenter alignright alignjustify | superscript subscript  | Blocks | outdent indent |  numlist bullist | forecolor backcolor table hr  removeformat | charmap | fullscreen  preview  |  image  link  anchor codesample |',
+
+            mobile : {
+                'menubar' : true,
+                'plugins' : ['autosave', 'lists', 'autolink'],
+                'toolbar' : ['undo', 'redo', 'bold','italic','indent','styleselect','bullist','numlist','image','backcolor','fullscreen','media','table']
+            },
+
+
+      
+            codesample_dialog_height: 500,
+            fullscreen_settings : {
+                    width : "640",
+                    height : "480"
+                },
+
+            toolbar_sticky: true,
+            menubar : false,
+
+      
+            statusbar: true,
+  
+            branding : false,
+  
+        });
+
+
+
+    </script>
+{% endblock upper_js %}
+
+
+
+{% block main_content %}
+    <div class="col-md-10 p-0">
+        <div class="profile-card  my-2 pb-2  p-1 p-md-4 shadow  ">
+            
+                                 
+            <h6 class="project-keys text-center py-2 ">Update Project </h6>
+                            
+                    
+
+            <form method="Post">
+                {% csrf_token %}
+                <div class="pl-3 post_create_profile ">
+                    <img src="{{ profile.image.url }}" 
+                    class="rounded-circle  ml-lg-4  p-1 profile-img">
+                    <div>
+                        <h5> {{ profile }}</h5>
+                        <p class="p-0 m-0">comments </p>
+                        {% render_field form.comments class="form-control p-sm-0" %}
+                        <p class="p-0 m-0"> Post Visibility </p>
+                        {% render_field form.visibility class="form-control p-sm-0" %}
+                        
+                    </div>
+                </div>
+                {{ form.errors }}
+                <p class="p-0 m-0"> Title </p>       
+                {% render_field form.title class="form-control" %}
+                <p class="p-0 m-0"> Description </p>
+                       
+                {% render_field form.description class="form-control" cols="40" rows="5" %}
+                <p class="p-0 m-0"> Body </p>
+                       
+                {% render_field form.body class="form-control" %}
+                
+                                       
+                {% render_field form.add_tags class="form-control " id="invisible-tags" style="display:none;" %}
+                    
+
+                <label for="add_tags">Tags: </label>
+                <small style="display: block;">Add atleast one tag</small>
+                <div class="ui-widget search-sort__divider">
+        
+                    <input id="add_tags_input" class="form-control mr-2" type="search">
+                    <span class="btn btn-primary ml-3" id="add_tags_button">Add a tag</span>
+    
+                </div>
+                <div id="added-tags-list" class="py-2">
+                </div>
+                
+
+
+                {{ form.media }}
+
+                
+                <button class="btn btn-primary mt-3">Update Project</button>
+
+            </form>
+
+                                
+                                
+        </div>
+    </div>
+    <style type="text/css">
+    .mce-fullscreen{
+        margin-top: 80px; 
+    }
+    </style>
+
+{% endblock main_content %}
+
+{% block lower_js %}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    
+    <script type="text/javascript">
+        $(function(){
+
+        //initializing members if alreay there?
+            var  tags = $("#invisible-tags").val().split('--');
+            for (i=0;i<tags.length-1;i++){
+
+                var tagname_html = '<p id="added-tag" class="tags">'+tags[i]+'</p>'
+                var remove = '<span class="remove btn "><i class="fa fa-times"></i></span>'
+            
+                var list  = '<span>'+tagname_html+remove+'</span>'
+                       
+                $("#added-tags-list").append(list);
+            }
+            
+            if ($("#invisible-tags").val().split('--').length >= 6){
+            
+                $("#add_tags_button").css("pointer-events","none");
+                $("#add_tags_button").addClass('btn-danger');
+                  
+        
+            };
+
+
+           
+           
+
+            
+            //auto complete tags
+            $( "#add_tags_input" ).autocomplete({
+             source: "{% url 'post:tag-auto-complete' %}",
+            });
+
+            //Add the tags
+            $("#add_tags_button").click(function(){
+                    
+
+                var tagname = $("#add_tags_input").val();
+                //adding tags to visible list
+                var tagname_html = '<p id="added-tag" class="tags">'+tagname+'</p>'
+                var remove = '<span class="remove btn "><i class="fa fa-times"></i></span>'
+                
+                var list  = '<span>'+tagname_html+remove+'</span>'
+                           
+                $("#added-tags-list").append(list);
+
+
+                //adding tags to invisible list
+                var previous_tag = $("#invisible-tags").val();
+                $("#invisible-tags").val(previous_tag +tagname+'--');
+    
+
+                    
+                //to disable the button 
+                if ($("#invisible-tags").val().split('--').length >= 6){
+            
+                    $("#add_tags_button").css("pointer-events","none");
+                    $("#add_tags_button").addClass('btn-danger');
+                      
+        
+                };
+
+                $("#add_tags_input").val('');
+
+            });
+
+
+            //for removing the tags
+            $(" #added-tags-list ").on('click' ,'.remove', function() {
+
+                //removing from visible list
+                var value_to_remove=$(this).siblings('#added-tag').html();
+                $(this).parent().remove();
+
+                function removebox(ss,compare){
+                    prev=0
+                    for(i=0;i<ss.length-1;i++){
+                        if (ss[i]=='-' && ss[i+1]=='-'){
+            
+                            for_compare = ss.slice(prev,i);
+                            if (for_compare == compare){
+                                final = ss.slice(0,prev)+ss.slice(i+2,ss.length);
+                                return final
+                            }
+                        prev  =i+2;
+                        }
+                    }
+                }
+                // removing from ivisible list
+                present_input_text=$("#invisible-tags").val();
+    
+                finalvalue = removebox(present_input_text,value_to_remove);
+                
+                $("#invisible-tags").val(finalvalue);
+               
+
+               // condition for enabling the button
+                if ($("#invisible-tags").val().split('--').length <= 5){
+                
+                    $("#add_tags_button").css("pointer-events","auto");
+
+                    $("#add_tags_button").removeClass('btn-danger');
+                    $("#add_tags_button").addClass('btn-primary');
+                };
+
+
+
+            });
+
+
+
+        });
+        
+
+    </script>
+
+
+{% endblock lower_js %}

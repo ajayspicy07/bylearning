@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load static %}
+{% load paginate_tags %}
+
+{% block own_css %}
+
+	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
+{% endblock own_css %}
+
+
+
+
+{% block main_content %}
+
+	<div class="col-md-8 p-0">
+		<div class="search-sort p-1 m-1">
+
+					
+			
+
+
+
+			<div class="py-1 my-1 post-list">
+			
+				{% if posts %}
+					<h5> Showing Results for <span class="tags">{{ tag }} </span></h5>
+					{%  for post in posts %} 
+						<article class="media content-section-main ">
+							<div class="media-body border p-3">
+							
+								<h4 class="article-title-border pb-2">
+									<a href="{% url 'post:detail-post' post.slug %}" class="article-title ">
+									{{ post.title }}
+									</a>
+									{%  is_saved_post post.slug request.user.username as is_saved_flag %}
+
+									{% if is_saved_flag %}
+										<i class="save-post-project fa float-right fa-bookmark text-success" id="{{ post.slug }}"></i>
+										
+									{% else %}
+										<i class="save-post-project far float-right fa-bookmark bg-white" id="{{ post.slug }}"></i>
+										
+									{% endif %}
+								</h4>
+								<small class="float-right saved-alert text-primary bg-light"></small>
+								
+								
+							
+								<div class="article-metadata pb-2">
+									<div>
+										<img src="{{ post.author.image.url }}" class="rounded-circle profile-small-image">
+										<span class="search-sort__sort">
+											<a href="{% url 'user:profile' post.author.slug %}"> {{ post.author }}</a>
+											
+										</span>
+										
+										<p class="text-muted float-right"> 
+											{{  post.date_created|date:"jS b, Y"  }}
+										</p>
+									</div>
+									<p><i class="fa fa-eye"></i> {{post.views }} views 
+										<i class="fa fa-sign-language"></i> {{ post.likes }} appreciations
+									</p>
+									<p> {{ post.author.college }} </p>
+									<div class="article-tags">
+										{% for tag in post.tags.all %}
+										<a href="{% url 'post:tag-posts' tag.slug %}" class="tags">{{ tag }} </a>
+										{% endfor %}
+									</div>
+								</div>
+
+								
+						
+
+								<div class="article-content text-muted">
+									<p> {{ post.description }} </p>
+									
+								</div>
+							
+								<a type="submit"  href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
+						
+							
+							</div>
+							
+						</article>
+					
+					{% endfor %}
+				{% else %}
+					<h3>No Posts for {{ tag }}</h3>
+				{% endif %}
+				
+			</div>
+
+					
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+				{% if posts.has_previous %}
+					<li class="page-item ">
+						<a class="page-link"
+						 href="?page=1">First</a>
+					</li>
+					<li>
+						<a class="page-link"
+						 href="?page={{ posts.previous_page_number }}">Previous</a>
+					</li>
+				{% endif %}
+					
+				{% if posts.has_next %}
+					<li class="page-item  mx-1 active">
+						<a class="page-link ">{{posts.number}}</a>
+					</li>
+
+					<li>
+						<a class="page-link"
+						 href="?page={{ posts.next_page_number }}">Next</a>
+					</li>
+					
+					<li class="page-item ">
+						 <a class="page-link"
+						 href="?page={{ posts.paginator.num_pages }}">Last</a> 
+					</li>
+				{% endif %}
+				
+				</ul>
+			
+			</nav>
+
+		
+
+		</div>
+		
+	</div>
+
+{% endblock main_content %}
+
+{% block lower_js %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.save-post-project').on('click', function(){
+				var slug = $(this).attr('id');
+				event.preventDefault();
+
+				$.ajax({
+					type : "post",
+					url  :  '/'+slug+'/False/save/',
+	   				
+	   				
+					success: function(message){
+				
+						if (message=='Created'){
+							var value = $('i[id='+slug+']')
+							value.removeClass('far');
+							value.addClass('fa text-success');
+							value.parents('.article-title-border').siblings('.saved-alert').text('saved');
+						}
+						else{
+							var value = $('i[id='+slug+']')
+							value.removeClass('fa text-success');
+							value.addClass('far');
+						
+						}
+
+					}
+	   			
+				});
+
+			});
+
+		});
+
+	</script>
+
+{% endblock lower_js %}

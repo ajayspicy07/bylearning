@@ -1,0 +1,109 @@
+
+.nav-below{
+	margin-top: 39px;
+	display: block;
+}
+
+.mce-fullscreen{
+	margin-top: 100px;
+}
+.profile-card {
+
+  	background-color:#f7f9fc;
+  	border-left: 20px solid pink;
+	border-radius:20px;
+}
+
+.profile-img{
+	width: 200px;
+	height: 200px;
+}
+
+.post_create_profile{
+	display: grid;
+	grid-template-columns: 0.8fr 1fr;
+}
+
+/* Banners css */
+.project-ads{
+  padding: 5%;
+ 
+  border-radius:5px;
+  background-color: #00C6CF;
+}
+.project-ads-card{
+   box-shadow: -4px -4px 4px grey;
+}
+
+.ads-header{
+  background-color: white;
+ border-bottom :4px solid #0808f6;
+ color: #4C3A33;
+}
+.project-keys{
+ color: white;
+ background-color: orange;
+  text-decoration: none;
+  padding: 2px;
+  font-style: italic;
+}
+
+
+
+
+
+/* Posts Css*/
+.tags{
+	color:#362f2f;
+	background-color: #F7D6E0;
+	display: inline;
+	text-decoration: none;
+	margin: 3px;
+	padding: 3px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.tags:hover{
+	text-decoration: none;
+	color: blue;
+}
+
+
+
+/*for following and followers*/
+.
+.profile-small-image-follower{
+	width: 30px;
+	height: 30px;
+}
+.profile-small-image{
+	width: 50px;
+	height: 50px;
+}
+
+/* for dividing */
+.search-sort__divider{
+ 	display: grid;
+ 	grid-template-columns: 1fr 0.3fr;
+ }
+ 
+ /* media query */
+ @media (max-width:450px){
+    .profile-card{
+    	border-left: 0px;
+    	padding:0px;
+    }
+    .profile-img{
+	width: 150px;
+	height: 150px;
+	}
+}
+
+@media (min-width: 770px){
+	.nav-below{
+    	margin-top:57px;
+  	}
+  	
+  
+
+}

@@ -1,0 +1,55 @@
+
+{% load static %}
+{% load widget_tweaks %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="{% static 'user/styles/signup.css' %}">
+</head>
+<body >
+      <div class="background-box ">
+        <div class="box-container container  mt-5 ">
+            <div class="box-logo text-center  text-primary font-weight-bold">
+            <h3>
+                <span class="dark">F</span>unny 
+                <span class="dark">L</span>earning
+            </h3>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+
+        {% endif %}
+        <form action="" method="post" accept-charset="utf-8" class="box-form">
+            {% csrf_token %}
+            <label for="username_email" class="box-label">
+                <span class="dark">E</span>mail/
+                <span class="dark">U</span>sername :
+            </label>
+            {% render_field form.username_email class="box-input" id="username_email" %}
+                    
+           
+            <label for="password" class="box-label">
+                <span class="dark">P</span>assword :
+            </label>
+             {% render_field form.password class="box-input" id="password" %}
+              
+         
+          <a href="{% url 'password-reset' %}">Forget Password?</a> <br />
+          <button  class="btn mt-3 btn-primary" type="submit">Login</button>
+        
+        </form>
+      
+      
+      <div class="ml-4 my-3 py-2 ">
+         <h6> Not a member! <a href="{% url 'user:signup' %}" >Signup</a> </h6>
+      </div>
+      
+      </div>
+    </div>
+
+   
+
+</body>

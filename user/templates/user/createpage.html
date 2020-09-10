@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load static %}
+
+
+{% block own_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'user/styles/profile.css' %}">
+{% endblock own_css %}
+
+
+{% block main_content %}
+	<div class="col-md-8">
+	    <div class="create-card  my-2 pb-2 p-4 shadow  ">
+	                    
+	                   
+	            
+
+	        <form method="Post" enctype="multipart/form-data">
+	        {% csrf_token %}
+
+
+	        <label for="page_name "> Page Name</label>
+	        
+	        {% render_field form.name class="form-control my-2" id="page_name" %}
+	                    
+
+	        <button class="btn btn-primary">Create Page</button>
+
+	        </form>
+
+	                        
+	                        
+	    </div>
+	</div>
+                    
+
+                    
+                    
+                    
+                            
+               
+              
+
+{% endblock main_content %}
+
+

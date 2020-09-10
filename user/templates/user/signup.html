@@ -1,0 +1,112 @@
+
+{% load static %}
+{% load widget_tweaks %}
+
+<head>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="{% static 'user/styles/signup.css' %}">
+</head>
+<body >
+	<div class="background-box">
+    	<div class="box-container container">
+        	<div class="box-logo text-center text-primary font-weight-bold">
+          		<h3>
+         			<span class="dark">F</span>unny 
+         			<span class="dark">L</span>earning </h3>
+        	</div>
+    
+        	{% if messages %}
+        		{% for message in messages %}
+        			{{ message }}
+        		{% endfor %}
+			{% endif %}
+			
+    		<form method="Post" action="" class="box-form row">
+
+    			{% csrf_token %}
+    			<div class="col-md-6">
+					<label for="username" class="box-label">
+               			<span class="dark">U</span>ser
+                		<span class="dark">n</span>ame :
+              		</label>
+              		{{ form.username }}
+              		{{ form.username.errors }}
+              		<p id="validate-username" class="text-white"></p>
+
+					<label for="first_name" class="box-label">
+               			<span class="dark"> F</span>irst
+                		<span class="dark">N</span>ame :
+              		</label>
+              		{{ form.first_name }}
+              		{{ form.first_name.errors }}
+
+              		<label for="last_name" class="box-label">
+               			<span class="dark"> L</span>irst
+                		<span class="dark">N</span>ame :
+              		</label>
+              		{{ form.last_name }}
+              		{{ form.last_name.errors }}
+
+              		<label for="email" class="box-label">
+                		<span class="dark">e-</span>Mail :
+              		</label>
+              		{{ form.email }}
+              		{{ form.email.errors }}
+				</div>
+				<div class="col-md-6">
+					<label for="id_user_mode" class="box-label">
+               			<span class="dark">U</span>ser
+                		<span class="dark">M</span>ode :
+              		</label>
+              		{{ form.user_mode }}
+              		{{ form.user_mode.errors }}
+
+					<label for="id_college" class="box-label">
+                		<span class="dark">C</span>ollege :
+              		</label>
+              		{{ form.college }}
+              		{{ form.college.errors }}
+              		<label for="dob" class="box-label">
+               			<span class="dark">D</span>ate of 
+                		<span class="dark"> B</span>irth :
+              		</label>
+              		{{ form.dob }}
+              		{{ form.dob.errors }}
+
+              		<label for="password1" class="box-label">
+                		<span class="dark">E</span>nter 
+                		<span class="dark">P</span>assword :
+              		</label>
+
+					{% render_field form.password1 class="box-input" id="password1" %}
+					{{ form.password1.errors }}
+
+              		<label for="password2" class="box-label">
+                		<span class="dark">R</span>e-enter 
+                		<span class="dark">P</span>assword :
+              		</label>
+              		{% render_field form.password2 class="box-input" id="password2" %}
+              		{{ form.password2.errors }}
+
+				</div>
+    			
+    			
+    			<button class="btn btn-primary text-white text-weight-bold mb-2 " >Sign in</button>
+    		</form>
+            <div>
+                <p class="text-center">Already have an account?<a class="text-white" href="{% url 'user:login' %}"> Login here</a> </p>
+        
+              
+
+            </div>
+            	
+    	</div>
+    
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'user/js/signup.js' %}"></script>
+
+   
+
+</body>

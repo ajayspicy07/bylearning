@@ -1,0 +1,116 @@
+{% load widget_tweaks %}
+{% load static %}
+
+{# render_field form.password1 class="box-input" id="password1" #}
+                    
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width" initial-scale="1.0"/>
+
+
+
+        {% block meta %}
+
+        {% endblock meta %}
+
+        <title></title>
+
+        <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        
+
+
+        
+        {% block own_css %}
+            <style type="text/css">
+                 .nav-below{
+                        margin-top: 65px;
+                        display: block;
+                    }
+                
+            </style>
+                
+        {% endblock own_css %}
+
+
+        {% block upper_js %}
+
+        {% endblock upper_js %}
+
+
+    </head>
+    <body>
+
+        {% include "navbar.html" %}
+        <hr class="nav-below"> 
+
+
+        {% block content_single %}
+        {% endblock content_single %}
+        
+        <div class="container bg-white">
+            <div class="row">
+            
+                {% block main_content %}
+
+                {% endblock main_content %}
+            
+                {% block second_main_content %}
+
+                {% endblock second_main_content %}
+                       
+                
+            </div>
+                    
+        </div>
+        
+
+
+
+
+    
+        
+
+
+
+        <footer class="page-footer font-small bg-secondary">
+            <div class="footer-copyright text-center py-3">© 2020 Copyright:
+                <a href="#" class="text-white">Bylearning.in</a>
+            </div>
+        </footer>
+      
+
+        
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+
+    
+        
+
+       
+
+
+        {% block lower_js %}
+        {% endblock lower_js %}
+    </body>
+</html>

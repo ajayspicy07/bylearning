@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load static %}
+{% load paginate_tags %}
+
+{% block own_css %}
+
+	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
+{% endblock own_css %}
+
+
+
+
+{% block main_content %}
+
+	<div class="col-md-8 p-0">
+		<div class="search-sort p-1 m-1">
+					
+			<form method="GET" class="border p-2">
+				<div class="search-sort__divider  py-2 my-2">
+
+					{% render_field filter.form.title class="form-control " type="search" placeholder="Search for Posts" %}
+					
+					
+					<button class="btn btn-primary px-1 mx-1" 
+					type="submit">Search</button>
+
+				</div>
+
+				<div class="row">
+					<div class="search-sort__sort col-md-6">
+						<small class="m-0">Sort by </small>
+						{% render_field filter.form.sorting class="form-control" %}
+			
+					</div>
+					<div class="search-sort__sort col-md-6">
+						<p class="m-0">Filter by </p>
+						{% render_field filter.form.filtering class="form-control" %}
+					
+						
+					</div>
+				</div>
+
+			</form>
+
+
+
+			<div class="py-1 my-1 post-list">
+				{% if posts_per_page %}
+					{%  for post in posts_per_page %} 
+						<article class="media content-section-main ">
+							<div class="media-body border p-3">
+							
+								<h4 class="article-title-border pb-2">
+									<a href="{% url 'post:detail-post' post.slug %}" class="article-title ">
+									{{ post.title }}
+									</a>
+
+									{%  is_saved_post post.slug request.user.username as is_saved_flag %}
+
+									{% if is_saved_flag %}
+										<i class="save-post-project fa float-right fa-bookmark text-success" id="{{ post.slug }}"></i>
+										
+									{% else %}
+										<i class="save-post-project far float-right fa-bookmark bg-white" id="{{ post.slug }}"></i>
+										
+									{% endif %}
+									
+								</h4>
+								<small class="float-right saved-alert text-primary bg-light"></small>
+									
+							
+								
+							
+								<div class="article-metadata pb-2">
+									<div>
+										<img src="{{ post.author.image.url }}" class="rounded-circle profile-small-image">
+										<span class="search-sort__sort">
+											<a href="{% url 'user:profile' post.author.slug %}"> {{ post.author }}</a>
+											
+										</span>
+										
+										<p class="text-muted float-right"> 
+										{{  post.date_created|date:"jS b, Y" }}</p>
+									</div>
+									<p><i class="fa fa-eye"></i> {{post.views }} views 
+										<i class="fa fa-sign-language"></i> {{ post.likes }} appreciations
+									</p>
+									<p> {{ post.author.college }} </p>
+									<div class="article-tags">
+										{% for tag in post.tags.all %}
+										<a href="{% url 'post:tag-posts' tag.slug %}" class="tags">{{ tag }} </a>
+										{% endfor %}
+									</div>
+								</div>
+
+								
+						
+
+								<div class="article-content text-muted">
+									<p> {{ post.description|truncatechars:500 }} </p>
+									
+								</div>
+							
+								<a type="submit" href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
+						
+							
+							</div>
+							
+						</article>
+					
+					{% endfor %}
+				{% else %}
+					<h2> No Posts</h2>
+				{% endif %}
+				
+			</div>
+			{% if is_paginated %}
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+					{% if posts_per_page.has_previous %}
+						<li class="page-item ">
+							<a class="page-link"
+							 href="{% my_paginate_url  1 'page' request.GET.urlencode %}">First</a>
+						</li>
+						<li>
+							<a class="page-link"
+							 href="{% my_paginate_url posts_per_page.previous_page_number 'page' request.GET.urlencode  %}">Previous</a>
+						</li>
+					{% endif %}
+						<li class="page-item  mx-1 active">
+							<a class="page-link ">{{posts_per_page.number}}</a>
+						</li>
+
+					{% if posts_per_page.has_next %}
+						<li>
+							<a class="page-link"
+							 href="{% my_paginate_url posts_per_page.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						</li>
+						
+						<li class="page-item ">
+							 <a class="page-link"
+							 href="{% my_paginate_url posts_per_page.paginator.num_pages 'page' request.GET.urlencode %}">Last</a> 
+						</li>
+					{% endif %}
+					
+					</ul>
+				
+				</nav>
+			{% endif %}
+
+
+		</div>
+		
+	</div>
+
+{% endblock main_content %}
+
+
+{% block second_main_content %}
+	<div class="col-md-4 d-sm-none d-md-block hide-small">
+                
+		<div class="content-section mt-2">
+			
+			<ul>
+			
+				<a href="{% url 'post:create-post' request.user.username %}" class="list-group-item  float-center btn shortcuts dropdown-item text-center">Create Post</a>
+				<a href="{% url 'post:create-folder' request.user.username %}" class="list-group-item  float-center btn shortcuts dropdown-item text-center">Create Folder</a>
+			
+				<a href="{% url 'post:profile-posts' request.user.username %}" class="list-group-item  float-center btn shortcuts dropdown-item text-center">My Posts</a>
+
+				<a href="{% url 'post:saved-posts' %}" class="list-group-item  float-center btn shortcuts dropdown-item text-center">Saved Posts</a>
+				
+				
+				
+			</ul>
+		    		
+		</div>
+	</div>
+
+{% endblock second_main_content %}
+
+
+
+
+{% block lower_js %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.save-post-project').on('click', function(){
+				var slug = $(this).attr('id');
+				event.preventDefault();
+
+				$.ajax({
+					type : "post",
+					url  :  '/'+slug+'/False/save/',
+	   				
+	   				
+					success: function(message){
+				
+						if (message=='Created'){
+							var value = $('i[id='+slug+']')
+							value.removeClass('far');
+							value.addClass('fa text-success');
+							value.parents('.article-title-border').siblings('.saved-alert').text('saved');
+						}
+						else{
+							var value = $('i[id='+slug+']')
+							value.removeClass('fa text-success');
+							value.addClass('far');
+						
+						}
+
+					}
+	   			
+				});
+
+			});
+
+		});
+
+	</script>
+
+{% endblock lower_js %}

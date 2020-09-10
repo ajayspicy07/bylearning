@@ -1,0 +1,14 @@
+asgiref==3.2.10
+awesome-slugify==1.6.5
+Django==3.1
+django-bootstrap-form==3.4
+django-filter==2.3.0
+django-js-asset==1.2.2
+django-tinymce==3.0.2
+django-widget-tweaks==1.4.8
+Pillow==7.2.0
+psycopg2==2.8.5
+pytz==2020.1
+regex==2020.7.14
+sqlparse==0.3.1
+Unidecode==0.4.21

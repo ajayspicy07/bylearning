@@ -1,0 +1,503 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% load paginate_tags %}
+
+{% block own_css %}
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css'%}">
+{% endblock own_css %}
+
+
+{% block upper_js %}
+
+{% endblock upper_js %}
+
+{% block main_content %}
+	<div class="col-md-8 p-0 ">
+		{% if project.visibility == 'PUBLIC' or project.author.content_object.college == request.user.user.college %}
+		<article class="media content-section-main ">
+			<div class="media-body border p-3">
+			
+				<h4 class="article-title-border pb-2">
+					<a  class="article-title ">
+					{{ project.title }}
+					</a>
+					{%  is_saved_project project.slug request.user.username as is_saved_flag %}
+
+					{% if is_saved_flag %}
+						<i class="save-post-project fa float-right fa-bookmark text-success" id="{{ project.slug }}"></i>
+										
+					{% else %}
+						<i class="save-post-project far float-right fa-bookmark bg-white" id="{{ project.slug }}"></i>
+										
+					{% endif %}
+										
+				
+				</h4>
+				<small class="float-right saved-alert text-primary bg-light"></small>
+				
+				{% if request.user.user == project.author.content_object or request.user.user in project.author.content_object.members.all or request.user.user == project.author.content_object.admin %}
+			 	
+				<div >
+					<a class="btn btn-secondary" href="{% url 'project:update-project' project.slug %}">  Edit  </a>
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete">Delete</button>
+
+					<!-- Modal -->
+					<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="exampleModalLabel">Are You Sure ?</h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					        Do you want to delete the Project <h5 class="font-italic"> {{ project }}</h5>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					        <form action="{% url 'project:delete-project' project.slug %}" method="post">
+					        	{% csrf_token %}
+					        	<button type="submit" class="btn btn-warning">Delete Project</button>
+					        	
+					        </form>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+					
+				</div>
+				{% endif  %}
+			
+				
+			
+				<div class="article-metadata pb-2">
+					<div>
+						<img src="{{ project.author.image.url }}" class="rounded-circle profile-small-image">
+						<span class="search-sort__sort">
+							<a href="{% url 'user:profile' project.author.slug %}"> {{ project.author }}</a>
+		
+						</span>
+						
+						<p class="text-muted float-right"> 
+						{{  project.date_created|date:"jS b, Y" }}</p>
+					</div>
+					<p><i class="fa fa-eye"></i> {{ project.views }} views 
+						<i class="fa fa-sign-language"></i><span id="total-likes"> {{ project.likes }} </span> appreciations
+					</p>
+					<p> {{ project.author.college }} </p>
+					<div class="article-tags">
+						{% for tag in project.tags.all %}
+						<p class="tags-looklike">{{ tag }} </p>
+						{% endfor %}
+					</div>
+				</div>
+
+				
+		
+
+				<div class="article-content text-muted">
+					<p> {{ project.description }} </p>
+					
+				</div>
+			
+				<div>
+					{{ project.body|safe}}
+				</div>
+
+				<div>
+					{%  is_liked_project project.slug request.user.username as is_liked_flag %}
+
+					{% if is_liked_flag %}
+						<p class="btn border mt-3 appreciate-post bg-warning" name={{ project.slug }}>
+							<i class="fa fa-sign-language " > appreciated</i>
+						</p>		
+					{% else %}
+						<p class="btn border mt-3 appreciate-post" name={{ project.slug }}>
+							<i class="far fa-sign-language " > appreciate</i>
+						</p>
+										
+					{% endif %}
+					
+					<a class="btn border" href="#comments">
+						<i class="fa fa-comments">Comments</i>		
+					</a>	
+				</div>
+			
+			</div>
+						
+		</article>
+
+
+		<div class="author bg-white p-2 mb-2 border">
+   			<h4>About Author</h4>
+        	<img style="width:40px; height:40px;"
+      		class="rounded-circle" src="{{ project.author.image.url }}" alt="" />
+    		<span class="mr-2 font-weight-bold" >{{ project.author }}</span>
+    		<p>{{ project.author.college }}</p>
+    		<a class="btn btn-outline-info"  href="{% url 'user:profile' project.author.slug %}">see Profile</a>
+ 		</div>
+ 		<div class="author bg-white p-2 my-2 border ">
+  			<h5>Search by tags</h5>
+     		<div class="mt-0 pb-1">
+     			{% for tag in project.tags.all %}
+     				<a href="{% url 'project:tag-projects' tag.slug %}" class="tags"> {{ tag }}</a>
+				{% endfor %}
+         
+         	</div>
+      	</div>
+      	
+      	
+		<span id="comments"></span>
+       	{% if project.comments == 'DISABLE' %}
+       		<h6> Comments are disabled by author </h6>
+       	{% else %}
+       		
+			<div class="author bg-white p-2 my-2 border ">
+	      		<h5> Comments </h5>
+	      		<form class="search-sort__divider  py-2 my-2">
+	      			
+					<textarea rows="2" id="comment-question"> </textarea>
+					<button class="btn btn-primary px-1 mx-1" 
+						type="submit" id="add-comment"> Add Comment </button>
+				</form>
+
+				<div id="added-comments">
+					
+					{% for comment in comments  %}
+						<div id="comment-id-{{ comment.id }}" class="individual-comment">
+							<div class="comment-head">
+								<img style="width:40px; height:40px;"
+		      					class="rounded-circle" src="{{ comment.user.image.url }}" alt="" />
+		      					<a href="{% url 'user:profile' comment.user.slug %}" style="text-decoration: none;"> {{ comment.user }}</a>
+		    					{% if request.user.username ==  comment.user.slug %}
+		    						<button class="my-2 float-right border-0 btn btn-outline-info delete-comment" name="{{ comment.id }}" >
+										<i class="fa  fa-trash float-right my-2 px-2"></i>
+									</button>
+
+									<!--modal -->
+									
+		    					{% endif %}
+		                    
+							</div>
+							<div class="  rounded-top mx-lg-4">
+		    					<p class="px-2"> {{ comment.question }}</p>
+		    					<div class=" px-2  py-2 my-2">
+
+									<textarea rows="2" class="form-control " id="reply-text" style="display: none;"> </textarea>
+									<button class="btn btn-outline-primary px-1 mx-1 py-0 mt-1 reply" type="submit" id="{{ comment.id }}" > reply </button>
+								</div> 
+							</div>
+							<div id="added-replies">
+							{% for reply in comment.replies.all %}
+
+								<div class=" pl-3 px-md-5 individual-reply" id="reply-id-{{ reply.id }}">
+			    					<div class="border-left p-1 bg-light">
+
+										<img style="width:40px; height:40px;"
+			      						class="rounded-circle" src="{{ reply.user.image.url }}" alt="" />
+
+			      						<a href="{% url 'user:profile' reply.user.slug %}" style="text-decoration: none;"> {{ reply.user }}</a>
+
+			      						{% if request.user.username ==  reply.user.slug %}
+		    								<button class="my-2 float-right border-0 btn btn-outline-info delete-reply" name="{{ reply.id }}">
+												<i class="fa  fa-trash float-right my-2 px-2"></i>
+											</button>
+		    							{% endif %}
+			    				
+			    						
+
+			    						<div>
+			    							<p class="px-2">{{ reply.answer }}</p>
+								
+										</div>
+		                    
+									</div>
+
+							
+
+								</div>
+
+							{% endfor %}
+							</div>
+						</div>
+
+					{% endfor %}
+					
+
+
+	    			
+					
+				</div>
+			</div>
+		{% endif %}
+      
+      	{% else %}
+
+			<h4 class=""> You don't have access to this Project </h4>
+
+		{% endif %}
+	</div>
+
+
+
+
+{% endblock main_content %}
+
+{% block lower_js %}
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			//open reply box
+			$('#added-comments').on('click','.reply', function(){
+				$(this).siblings().show();
+				$(this).text('Add Reply');
+				$(this).removeClass('reply');
+				$(this).addClass('add-reply');
+				
+			});
+			
+
+			//for adding comment 
+			$("#add-comment").on('click' , function(){
+			
+				var question = $('#comment-question').val();
+				
+
+				event.preventDefault();
+
+				$.ajax({
+					
+					url: "{% url 'comment:create-comment'  slug=project.slug model_type='projects'  %}",
+
+					data :{
+   						'question':question
+   					},
+
+	   				
+	   				
+					success: function(profile_list){
+
+							
+							var name = profile_list.name;
+							var image = profile_list.image;
+							var slug = profile_list.slug;
+
+							var comment = profile_list.comment;
+							var id = profile_list.id;
+							
+							var image_html= '<img style="width:40px; height:40px;" class="rounded-circle"  src="'+image+'" />'
+							
+							
+							var name_html = '<a href="/p/'+slug+'" style="text-decoration: none; ">'+ name +'</a>'
+
+							var delete_html = '<button class="my-2 float-right border-0 btn btn-outline-info delete-comment" name="'+id+'">'+'<i class="fa  fa-trash float-right my-2 px-2"></i> </button>'
+							var comment_html = '<p class="px-2">'+comment+'</p>'
+
+							var reply_box= '<textarea rows="2" class="form-control reply-text" id="reply-text" style="display: none;"> </textarea>' + '<button class="btn btn-outline-primary mt-1 px-1 py-0 mx-1 reply" type="submit" id="'+id+'" > reply </button>'
+
+							var first_div = '<div>'+image_html+name_html+delete_html+'</div>'
+							var second_div = '<div class=" rounded-top mx-lg-4">'+comment_html+'<div class=" px-2  py-2 my-2">'+reply_box+'</div>'+'</div>'
+
+							var comment = '<div id="comment-id-'+id+'" class="individual-comment">'+first_div+second_div+'</div>'
+
+							
+
+							$("#added-comments").prepend(comment);
+							$('#comment-question').val('');
+							
+							
+						
+
+					}
+	   			
+				});
+			return false;
+			});
+
+			//deleting comments
+			$("#added-comments").on('click', '.delete-comment', function(){
+				console.log('kl');
+				var id = $(this).attr('name');
+
+				event.preventDefault();
+
+				$.ajax({
+					
+					url: "{% url 'comment:delete-comment' %}",
+
+					data :{
+   						'id':id
+   					},
+
+	   				
+	   				
+					success: function(msg){
+						if (msg=='Deleted'){
+
+						 	$("#comment-id-"+id).remove();
+                
+						}
+					}
+	   			
+				});
+			return false;
+			});
+
+
+			//adding repliess
+			$('#added-comments').on('click', '.add-reply' , function(){
+				var comment_id = $(this).attr('id');
+				var reply = $(this).siblings('textarea').val();
+				
+
+				event.preventDefault();
+				$.ajax({
+	
+					url: "{% url 'comment:create-reply'  %}",
+
+					data :{
+					'id': comment_id,
+					'reply' : reply
+					},
+
+		
+		
+					success: function(profile_list){
+						location.reload();
+		
+
+					}
+	   			
+				});
+
+
+				
+			return false;
+			});
+
+			//deleting replies
+			$(".individual-reply").on('click', '.delete-reply', function(){
+				//above method is for future elements , really not required
+				var id = $(this).attr('name');
+
+				event.preventDefault();
+
+				$.ajax({
+					
+					url: "{% url 'comment:delete-reply' %}",
+
+					data :{
+   						'id':id
+   					},
+
+	   				
+	   				
+					success: function(msg){
+						if (msg=='Deleted'){
+							location.reload();
+		
+						}
+					}
+	   			
+				});
+			return false;
+			});
+
+			//for saving posts
+			$('.save-post-project').on('click', function(){
+				var slug = $(this).attr('id');
+				event.preventDefault();
+
+				$.ajax({
+					type : "POST",
+					url  :  '/'+slug+'/True/save/',
+	   				
+	   				
+					success: function(message){
+				
+						if (message=='Created'){
+							var value = $('i[id='+slug+']')
+							value.removeClass('far');
+							value.addClass('fa text-success');
+							value.parents('.article-title-border').siblings('.saved-alert').text('successfully saved');
+						}
+						else{
+							var value = $('i[id='+slug+']')
+							value.removeClass('fa text-success');
+							value.addClass('far');
+						
+						}
+
+					}
+	   			
+				});
+
+			});
+			
+			//for appreciating the post
+
+			$('.appreciate-post').on('click', function(){
+				
+				var slug = $(this).attr('name');
+				event.preventDefault();
+
+				$.ajax({
+					type : "POST",
+					url  :  '/'+slug+'/True/like/',
+	   				
+	   				
+					success: function(message){
+						
+						
+						if (message=='Created'){
+							var value = $('p[name='+slug+']')
+							value.addClass('bg-warning')
+							value.children().addClass('fa fa-sign-language'); 
+							value.children().text(' appreciated'); 
+							var like =$('#total-likes').text();
+							$('#total-likes').text(parseInt(like)+1);
+							
+						
+						}
+						else{
+							var value = $('p[name='+slug+']')
+							value.removeClass('bg-warning')
+							value.children().removeClass('fa fa-sign-language'); 
+							value.children().addClass('far fa-sign-language'); 
+							
+							value.children().text(' appreciate'); 
+							var like =$('#total-likes').text();
+							$('#total-likes').text(parseInt(like)-1);
+							
+						
+						}
+						
+
+					}
+	   			
+				});
+
+			});
+
+
+
+
+
+		});
+	</script>
+
+{% endblock lower_js %}
+
+
+
+
+
+
+

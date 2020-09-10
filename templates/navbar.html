@@ -1,0 +1,89 @@
+<style type="text/css">
+    
+
+  
+    .nav-form{
+        display: inline-grid;
+        padding: 10px;
+        grid-template-columns: 1fr 0.2fr;
+
+    }
+    .navbar{
+        background-image: linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca,
+        #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+    }
+    .nav-box-grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .main-link{
+        text-decoration: none;
+        background-color: #1e90ff;
+        color:white;
+        margin:10px;
+        padding: 10px;
+    }
+    .main-link:hover{
+        background-color: white;
+        color:#1e90ff;
+        text-decoration: none;
+    }
+
+</style>
+
+<nav class="navbar fixed-top navbar-expand-md navbar-light ">
+            <a class="navbar-brand text-primary mr-5" href="{% url 'user:index' %}">
+                <span class="text-dark">B</span>y 
+                <span class="text-dark">L</span>earning
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" 
+            data-target="#navbarNav" >
+          
+                <span class="navbar-toggler-icon">
+                </span>
+            </button>
+            <div class="collapse navbar-collapse ml-lg-5" id="navbarNav">
+                <div class="navbar-nav text-center ml-lg-5 ">
+                    {% if user.is_authenticated %}
+                        <div class="nav-box-grid d-md-none ">
+                            <a href="{% url 'user:profile' request.user.username %}" class="text-center main-link">Profile</a>
+                            <a href="{% url 'user:logout' %}" class="text-center main-link">Logout</a>
+                        </div>
+                    {% else %}
+                        <div class="nav-box-grid d-md-none ">
+                            <a href="{% url 'user:login' %}" class="text-center main-link">Log in</a>
+                            <a href="{% url 'user:signup' %}" class="text-center main-link">Sign up</a>
+                        </div>
+                    {% endif %}
+                  
+                    <form class="nav-form mx-sm-5"  action="{% url 'user:search-post-project' %}">
+                        <input class="form-control mx-sm-5" type="search" placeholder="Search for posts or projects" name="title" style="width: 250px;" required="true">
+                        <button class="btn bg-ligth text-white " type="submit">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    
+                        <a class="nav-item nav-link font-weight-bold my-1 " href="{% url 'user:home' %}">Home</a>
+                        <a class="nav-item font-weight-bold  nav-link my-1" href="{% url 'project:projects' %}">Projects</a>
+                        <a class="nav-item nav-link font-weight-bold my-1 " href="{% url 'post:posts' %}">Posts</a>
+                        <a class="nav-item font-weight-bold  nav-link my-1" href="">About Us</a>
+              
+                        {% if user.is_authenticated %}      
+                            <a class="text-primary d-none font-weight-bold d-md-block nav-link my-1" 
+                                href="{% url 'user:profile' request.user.username %}">Profile</a>
+                            <a class="text-primary d-none font-weight-bold d-md-block nav-link my-1" 
+                                href="{% url 'user:logout'%}">Logout</a>   
+                        {% else %}
+                            <a class="text-primary d-none font-weight-bold d-md-block nav-link my-1" 
+                                href="{% url 'user:login' %}">Log in</a>
+                            <a class="text-primary d-none font-weight-bold d-md-block nav-link my-1" 
+                                href="{% url 'user:signup'%}">Sign up</a>   
+                    
+
+
+                        {% endif %}
+                    
+                </div>
+            </div>
+        </nav>

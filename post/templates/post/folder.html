@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load static %}
+{% load paginate_tags %}
+
+{% block own_css %}
+
+	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
+{% endblock own_css %}
+
+
+
+
+{% block main_content %}
+	{% if request.user.user.college == profile.content_object.college or  folder.visibility == 'PUBLIC' %}
+		<div class="col-md-8 p-0">
+			<div class="search-sort p-1 m-1">
+
+				<div class="pl-4 profile-card ">
+					<img src="{{ profile.image.url }}" 
+					class="rounded-circle ml-2 ml-lg-4 p-1 profile-img">
+					<div class="mt-lg-5 ">
+						<h4>Folder Name</h4>
+						<p> {{ folder }}</p>
+						<p> Date Created : {{ folder.date_created|date:"jS b, Y" }} </p>
+						<h6>
+						<a  href="{% url 'user:profile' profile.slug %}" style="text-decoration: none;">{{ profile }}</a>
+						</h6>
+						<p> {{ profile.college }}</p>
+
+					{% if request.user.user == profile.content_object or request.user.user in profile.content_object.members.all or request.user.user == profile.content_object.admin %}
+						<div >
+
+
+
+							<a type="submit" href="{% url 'post:create-post-folder' folder.slug %}" class="btn btn-secondary">Add Post</a>
+							        	
+							
+						
+
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete">Delete Folder </button>
+
+							<!-- Modal -->
+							<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							  <div class="modal-dialog" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <h5 class="modal-title" id="exampleModalLabel">Are You Sure ?</h5>
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          <span aria-hidden="true">&times;</span>
+							        </button>
+							      </div>
+							      <div class="modal-body">
+							        Do you want to delete the Folder <h5 class="font-italic">{{ folder }}</h5>
+							        <small class="font-italic">Deleting folder does not delete the posts associated with the folder </small>
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+							        <form action="{% url 'post:delete-folder' folder.slug %}" method="post">
+							        	{% csrf_token %}
+							        	<button type="submit" class="btn btn-warning">Delete Folder</button>
+							        	
+							        </form>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+						
+						</div>
+					{% endif  %}
+					
+					
+					</div>
+
+				</div>
+			</div>
+			<div class="py-1 my-1 post-list">
+					{% if posts %}
+						{%  for post in posts %} 
+							<article class="media content-section-main ">
+								<div class="media-body border p-3">
+								
+									<h4 class="article-title-border pb-2">
+										<a href="{% url 'post:detail-post' post.slug %}" class="article-title ">
+										{{ post.title }}
+										</a>
+										
+										{%  is_saved_post post.slug request.user.username as is_saved_flag %}
+
+										{% if is_saved_flag %}
+											<i class="save-post-project fa float-right fa-bookmark text-success" id="{{ post.slug }}"></i>
+											
+										{% else %}
+											<i class="save-post-project far float-right fa-bookmark bg-white" id="{{ post.slug }}"></i>
+											
+										{% endif %}
+									</h4>
+								
+									<small class="float-right saved-alert text-primary bg-light"></small>
+										
+								
+								
+									<div class="article-metadata pb-2">
+										<div>
+											
+											
+											<p class="text-muted float-right"> 
+												{{  post.date_created|date:"jS b, Y"  }}
+											</p>
+										</div>
+										<p><i class="fa fa-eye"></i> {{post.views }} views 
+											<i class="fa fa-sign-language"></i> {{ post.likes }} appreciations
+										</p>
+										<p> {{ post.author.college }} </p>
+										<div class="article-tags">
+											{% for tag in post.tags.all %}
+											<a href="" class="tags">{{ tag }} </a>
+											{% endfor %}
+										</div>
+									</div>
+
+									
+							
+
+									<div class="article-content text-muted">
+										<p> {{ post.description|truncatechars:500 }} </p>
+										
+									</div>
+								
+									<a type="submit"  href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
+							
+								
+								</div>
+								
+							</article>
+						
+						{% endfor %}
+					{% else %}
+						<h3>No Posts </h3>
+					{% endif %}
+					
+			</div>
+			
+		</div>
+	{% else  %}
+		<h1> You don't have access to this Folder </h1>
+
+	{% endif %}
+
+{% endblock main_content %}
+
+
+{% block lower_js %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.save-post-project').on('click', function(){
+				var slug = $(this).attr('id');
+				event.preventDefault();
+
+				$.ajax({
+					type : "post",
+					url  :  '/'+slug+'/False/save/',
+	   				
+	   				
+					success: function(message){
+				
+						if (message=='Created'){
+							var value = $('i[id='+slug+']')
+							value.removeClass('far');
+							value.addClass('fa text-success');
+							value.parents('.article-title-border').siblings('.saved-alert').text('saved');
+						}
+						else{
+							var value = $('i[id='+slug+']')
+							value.removeClass('fa text-success');
+							value.addClass('far');
+						
+						}
+
+					}
+	   			
+				});
+
+			});
+
+		});
+
+	</script>
+
+{% endblock lower_js %}
