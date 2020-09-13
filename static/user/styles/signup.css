@@ -1,0 +1,80 @@
+
+.background-box{
+ 
+	background: url('https://bootdey.com/img/Content/bg1.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	height: 100%;
+	border: 1px solid lightblue;/* don't remove */
+}
+
+
+
+.box-container{
+	padding-top:10px;
+	background-image: linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+
+}
+
+.box-form{
+
+	margin: 10px 20px;
+	padding-left: 20px;
+
+}
+.box-label{
+	color: blue;
+	border-bottom: 1px solid #008e9b;
+	padding: 5px;
+}
+
+.dark{
+
+	color: black;
+}
+
+#choose{
+
+	width: 220px;
+
+}
+.box-input,#id_user_mode,#id_college {
+	padding: 5px 0;
+	border: none;
+	background: transparent;
+	display: block;
+	border-bottom: 3px solid blue;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	color: #ffe4f9;
+}
+#id_user_mode,#id_college{
+	
+	color :white;
+}
+#id_college,#id_user_mode{
+	background-color: #86a8e7;
+}
+#id_college:hover,#id_user_mode:hover{
+	background-color: #86a8e7;
+}
+
+.box-input:hover{
+	background: #86a8e7;
+}
+
+
+@media (min-width:960px){
+	.box-container{
+		margin-top: 30%;
+		border-radius: 15px;
+	}
+}
+
+@media (orientation: landscape){
+	.background-box{
+		height: 100%;
+	}
+	.box-container{
+		margin-top:1%;
+	}
+}

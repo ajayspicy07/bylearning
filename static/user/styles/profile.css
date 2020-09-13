@@ -1,0 +1,192 @@
+
+.nav-below{
+	margin-top: 39px;
+	display: block;
+}
+
+.rounded-circle{
+  	border-radius: 50%;
+  	width:55%;
+  	border:2px solid lightgrey;
+  }
+.profile-card {
+  	display: grid;
+  	grid-template-columns: 1fr 1fr;
+  	background-color:#f7f9fc;
+  	border-left: 20px solid pink;
+	border-radius:20px;
+}
+
+.create-card{
+	background-color:#f7f9fc;
+  	border-left: 20px solid pink;
+	border-radius:20px;
+
+}
+
+.profile-img{
+	height: 200px;
+	width: 200px;
+}
+.profile-edit-circle{
+
+}
+.divider{
+  	border: 2px solid pink;
+  	border-radius: 10px;
+  	display: grid;
+  	grid-template-columns: 1fr 0.2fr;
+
+}
+
+
+/*Side Menu */
+.shortcuts{
+  background-color: #E71D36;
+  color:#EDFFFC;
+  font-size: 20px;
+ }
+
+.shortcuts:hover{
+  background-color: #C8E7FF;
+  font-size: 20px;
+  color: #5F0F40;
+  border-bottom: 4px solid #05668D;
+}
+.p-3.shadow.rounded {
+    border-top: 5px solid blue;
+}
+
+
+/* Posts Css*/
+
+ .search-sort__sort{
+ 	display: inline-grid;
+  	grid-template-rows: 1fr 1fr;
+    
+ }
+
+ .article-title{
+ 	color: #444444;
+ }
+.content-section-main{
+	background: #ffffff;
+	
+	
+	padding-bottom: 10px;
+	margin-bottom: 15px;
+	margin-top: 20px;
+	border-top: 2px solid #406d9e;
+}
+
+.article-title:hover{
+	color:#428111;
+	text-decoration: none;
+}
+.article-title-border{
+	border-bottom:3px solid blueviolet;
+}
+.article-metadata{
+  padding-bottom:50px;
+  
+}
+.article-metadata a:hover{
+
+ color:#333;
+ text-decoration: none;
+}
+
+.article-content{
+  border-top: 3px solid #7fbf8e;
+  border-radius:5px;
+
+}
+
+.tags{
+	color:#362f2f;
+	background-color: #F7D6E0;
+	display: inline;
+	text-decoration: none;
+	margin: 3px;
+	padding: 3px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.tags:hover{
+	text-decoration: none;
+}
+
+
+
+/*for following and followers*/
+.followers-header{
+	display: grid;
+	grid-template-columns: 1fr 0.2fr;
+}
+
+.profile-small-image-follower{
+	width: 30px;
+	height: 30px;
+}
+.profile-small-image{
+	width: 50px;
+	height: 50px;
+}
+.followers-body{
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+
+/*For profile update Form */
+#id_members{
+	display: none;
+	visibility: hidden;
+}
+
+
+/*For page updation form in profile update form*/
+.page-remove-members{
+	display: grid;
+	grid-template-columns: 1fr 0.2fr;
+}
+.page-remove-members-grid{
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+}
+ 
+ /* media query */
+ @media (max-width:450px){
+    .profile-card{
+    	border:none;
+    	display: grid;
+  	    grid-template-columns: 1fr;
+	    border-radius:20px;
+    
+    }
+}
+
+@media ( max-width: 767px){
+   .hide-small{
+   	visibility: hidden;
+   	display: none;
+
+ 	}
+ }
+@media ( min-width: 767px) and (max-width: 980px ){
+   .profile-img{
+   	height: 100px;
+   	width: 100px;
+   }
+ }
+
+@media (min-width: 770px){
+	.nav-below{
+    	margin-top:57px;
+  	}
+  	.index-motto>p{
+  		font-size: 40px;
+  	}
+  
+
+}

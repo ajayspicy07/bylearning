@@ -1,0 +1,31 @@
+.nav-below{
+  margin-top: 55px;
+  display: block;
+  
+}
+
+.nav-form-inline{
+  display: grid;
+  padding: 10px;
+  grid-template-columns: 1fr 0.1fr;
+}
+.navbar{
+  background-image: linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca,
+   #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+}
+.nav-box-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.main-link{
+  text-decoration: none;
+  background-color: #1e90ff;
+  color:white;
+  margin:10px;
+  padding: 10px;
+}
+.main-link:hover{
+  background-color: white;
+  color:#1e90ff;
+  text-decoration: none;
+}
