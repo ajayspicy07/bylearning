@@ -6,7 +6,3 @@ myvenv
 db.sqlite3
 /media
 
-**/migrations/
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
