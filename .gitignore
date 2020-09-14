@@ -5,4 +5,4 @@ __pycache__
 myvenv
 db.sqlite3
 /media
-migrations
+/migrations
