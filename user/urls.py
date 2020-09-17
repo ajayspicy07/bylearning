@@ -16,6 +16,7 @@ app_name = 'user'
 urlpatterns = [
     path('', views.index, name = "index"),
     path('home/' , views.home , name = "home"),
+    path('about-us/', views.about_us, name = "about-us"),
 
     path('signup/', views.signup, name = "signup"),
     path('validate-username/', views.validate_username, name="validate-username"),

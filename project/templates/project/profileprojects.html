@@ -24,6 +24,14 @@
 					<h5>{{ profile }}</h5>
 					<p> {{ profile.college }}</p>
 
+					{% if request.user.user == profile.content_object or request.user.user in profile.content_object.members.all or request.user.user == profile.content_object.admin %}
+					<div >
+
+						<a href="{% url 'project:create-project' profile.slug %}" class="btn   btn-secondary">Create Project</a>
+
+	    			</div>
+	    			{% endif %}
+
 				</div>
 				
 				

@@ -48,10 +48,10 @@ def create_project(request, slug):
 			data = form.cleaned_data['add_tags']
 			for i in data.split('--')[:-1]:
 				try:
-					tag = Tag.objects.get(tag_name__iexact=i)
+					tag = Tag.objects.get(tag_name__iexact=i.strip())
 				except:
 					if i!=' ':
-						tag = Tag.objects.create(tag_name=i,user_create=True)
+						tag = Tag.objects.create(tag_name=i.strip(),user_create=True)
 						tag.save()
 				form.instance.tags.add(tag)
 			return redirect('project:detail-project', slug = form.instance.slug)
@@ -68,7 +68,7 @@ def create_project(request, slug):
 class project(LoginRequiredMixin, ListView):
 	model = Project
 	template_name = 'project/projects.html'
-	paginate_by = 2
+	paginate_by = 10
 	ordering =[ '-date_created']
 
 	def get_context_data(self,**kwargs):
@@ -260,10 +260,10 @@ def update_project(request, slug):
 			data = form.cleaned_data['add_tags']
 			for i in data.split('--')[:-1]:
 				try:
-					tag = Tag.objects.get(tag_name__iexact=i)
+					tag = Tag.objects.get(tag_name__iexact=i.strip())
 				except:
 					if i!=' ':
-						tag = Tag.objects.create(tag_name=i,user_create=True)
+						tag = Tag.objects.create(tag_name=i.strip(),user_create=True)
 						tag.save()
 				form.instance.tags.add(tag)
 		return redirect('project:detail-project', slug = form.instance.slug)
@@ -281,7 +281,7 @@ class profile_projects(LoginRequiredMixin ,ListView):
 	model = Project
 	template_name = 'project/profileprojects.html'
 	context_object_name= 'projects'
-	paginate_by = 1
+	paginate_by = 10
 
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
@@ -314,7 +314,7 @@ class profile_projects(LoginRequiredMixin ,ListView):
 class saved_projects(LoginRequiredMixin ,ListView):
 	model = Saved
 	template_name = 'project/savedprojects.html'
-	paginate_by = 2
+	paginate_by = 10
 
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
@@ -350,7 +350,7 @@ class tag_projects(LoginRequiredMixin, ListView):
 	model = Project
 	template_name = 'project/tagprojects.html'
 	context_object_name= 'projects'
-	paginate_by = 2
+	paginate_by = 10
 	ordering =[ '-date_created']
 
 	def get_context_data(self,**kwargs):

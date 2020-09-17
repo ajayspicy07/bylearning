@@ -31,6 +31,9 @@ custom_slugify = Slugify()
 def index(request):
 	return render(request,'user/index.html')
 
+def about_us(request):
+	return render(request,'user/aboutus.html')	
+
 @login_required
 def home(request):
 	college = request.user.user.college
@@ -46,13 +49,19 @@ def signup(request):
 	if request.method=='POST':
 		form = UserRegistrationForm(request.POST)
 		if form.is_valid():
-			form.save()
 			username = form.cleaned_data['username']
-			password = form.cleaned_data['password1']
-			user = auth.authenticate(username=custom_slugify(username), password=password)
-			print(username,password)
-			auth.login(request,user)
-			return redirect('user:profile', slug=username)
+			
+			if  '.' in username or '@' in username or '_' in username or '--' in username or '-' == username[-1]:
+				messages.error(request, 'Check Username?')
+				pass
+			else:
+				form.save()
+				username = form.cleaned_data['username']
+				password = form.cleaned_data['password1']
+				user = auth.authenticate(username=custom_slugify(username), password=password)
+			
+				auth.login(request,user)
+				return redirect('user:profile', slug=username)
 	else:
 		form=UserRegistrationForm()
 	return render(request,'user/signup.html',{'form':form})
@@ -60,15 +69,17 @@ def signup(request):
 
 def validate_username(request):
 	username=request.GET.get('username',None)
-	print(request.GET)
+
 	data = {
 		'is_taken': User.objects.filter(username__iexact=username).exists()
 	}
 	
 	if data['is_taken']:
 		message='User with that username already exists'
-	elif ' ' in username :
-		message='Invalid Username'
+	
+	elif '.' in username or '@' in username or '_' in username or '--' in username or '-' == username[-1]:
+		message = 'Invalid Username'
+	
 	else:
 		message='Username is available'
 		
@@ -78,12 +89,15 @@ def validate_username(request):
 def login(request):
 	form = LoginForm()
 	if request.method == 'POST':
-		name = request.POST['username_email']
+		name = request.POST['username_email'].strip()
 		password = request.POST['password']
+		
 		try :
-			user = auth.authenticate(username=User.objects.get(email=name).username, password= password)
+			
+			user = auth.authenticate(username=User.objects.get(email__iexact=name).username, password= password)
 		except:
 			user = auth.authenticate(username=name, password=password)
+		
 		if user is not None:
 			auth.login(request,user)
 			if request.GET.get('next',None):

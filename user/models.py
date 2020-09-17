@@ -9,6 +9,7 @@ from django.contrib.auth.models import User as auth_user
 from django.utils import timezone
 from slugify import UniqueSlugify,Slugify
 from PIL import Image
+from django.conf import settings
 
 from django.urls import reverse
 #from django.shortcuts import redirect
@@ -33,6 +34,7 @@ class College(models.Model):
 
 	class Meta:
 		db_table = "Colleges"
+		ordering = ('name',)
 
 	def __str__(self):
 		return self.name
@@ -136,6 +138,7 @@ class Profile(models.Model):
 	def __str__(self):
 		return self.content_object.full_name()
 
+		
 	def save(self, *args, **kwargs):
 		if self.content_object.is_page():
 			self.slug=custom_slugify(self.content_object.profile_name(), 
@@ -147,11 +150,35 @@ class Profile(models.Model):
 
 		super().save(*args, **kwargs)
 
+		if settings.DEBUG :
+			img = Image.open(self.image.path)
+
+			if img.height > 300 or img.width > 300:
+				output_size = (300, 300)
+				img.thumbnail(output_size)
+				img.save(self.image.path)
+
+		
+		
+		
+		'''
+		
 		img = Image.open(self.image.path)
+		#img = Image.open(self.image.file)
 		if img.height > 300 or img.width > 300:
 			output_size = (300, 300)
 			img.thumbnail(output_size)
-			img.save(self.img.path)
+			img.save(self.image.path)
+			#img.save(self.image.file)
+			
+			#img.save(self.image.path)
+			
+			#img.save(self.img.file)
+			#img.save(tempimg,'image/jpeg')
+			#self.image.save(img)
+		'''
+		
+		
     
 		
 		

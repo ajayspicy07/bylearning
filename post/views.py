@@ -48,11 +48,12 @@ def create_post(request, slug):
 
 			data = form.cleaned_data['add_tags']
 			for i in data.split('--')[:-1]:
+				
 				try:
-					tag = Tag.objects.get(tag_name__iexact=i)
+					tag = Tag.objects.get(tag_name__iexact=i.strip())
 				except:
 					if i!=' ':
-						tag = Tag.objects.create(tag_name=i,user_create=True)
+						tag = Tag.objects.create(tag_name=i.strip(),user_create=True)
 						tag.save()
 				form.instance.tags.add(tag)
 			return redirect('post:detail-post', slug = form.instance.slug)
@@ -77,7 +78,7 @@ def tagautocomplete(request):
 class posts(LoginRequiredMixin, ListView):
 	model = Post
 	template_name = 'post/posts.html'
-	paginate_by = 5
+	paginate_by = 10
 	ordering =[ '-date_created']
 
 	def get_context_data(self,**kwargs):
@@ -205,7 +206,8 @@ def create_folder(request, slug):
 class folder(LoginRequiredMixin,ListView):
 	model = PostDirectory
 	template_name = 'post/folder.html'
-	paginate_by = 2
+	#not doing pagination really
+	paginate_by = 10
 	ordering =[ '-date_created']
 
 	def get_context_data(self,**kwargs):
@@ -218,7 +220,7 @@ class folder(LoginRequiredMixin,ListView):
 		folder = PostDirectory.objects.get(slug=slug)
 		profile = folder.owner
 
-		posts = folder.directory.all()
+		posts = folder.directory.all().order_by('date_created')
 		
 
 		context= {
@@ -311,10 +313,10 @@ def update_post(request, slug):
 			data = form.cleaned_data['add_tags']
 			for i in data.split('--')[:-1]:
 				try:
-					tag = Tag.objects.get(tag_name__iexact=i)
+					tag = Tag.objects.get(tag_name__iexact=i.strip())
 				except:
 					if i!=' ':
-						tag = Tag.objects.create(tag_name=i,user_create=True)
+						tag = Tag.objects.create(tag_name=i.strip(),user_create=True)
 						tag.save()
 				form.instance.tags.add(tag)
 		return redirect('post:detail-post', slug = form.instance.slug)
@@ -332,7 +334,7 @@ class profile_posts(LoginRequiredMixin ,ListView):
 	model = Post
 	template_name = 'post/profileposts.html'
 	context_object_name= 'posts'
-	paginate_by = 5
+	paginate_by = 10
 
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
@@ -366,7 +368,7 @@ class profile_posts(LoginRequiredMixin ,ListView):
 class saved_posts(LoginRequiredMixin ,ListView):
 	model = Saved
 	template_name = 'post/savedposts.html'
-	paginate_by = 2
+	paginate_by = 10
 
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
@@ -411,7 +413,6 @@ class profile_folders(LoginRequiredMixin, ListView):
 	model = PostDirectory
 	template_name = 'post/profilefolders.html'
 	context_object_name= 'posts'
-	paginate_by = 1
 	
 
 	def get_context_data(self,**kwargs):
@@ -444,7 +445,7 @@ class tag_posts(LoginRequiredMixin, ListView):
 	model = Post
 	template_name = 'post/tagposts.html'
 	context_object_name= 'posts'
-	paginate_by = 4
+	paginate_by = 10
 	ordering =[ '-date_created']
 
 	def get_context_data(self,**kwargs):

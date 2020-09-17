@@ -29,9 +29,9 @@ SECRET_KEY = 'x5b7ezlkt5i=su^kmf*m7@@^r4^r$0x)5sn+_ri!&3loa^ugfr'
 
 #SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'tinymce',
     'widget_tweaks',
+    'storages',
 
 
     'user.apps.UserConfig',
@@ -142,7 +143,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST   = 'smtp.gmail.com'
 EMAIL_PORT  = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mr.money2428@gmail.com'
+EMAIL_HOST_USER = 'bylearning.official@gmail.com'
 EMAIL_HOST_PASSWORD = 'Ajay@1999'
 
 
@@ -186,6 +187,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'height': 1000,
     'width' : 600,
     #'plugins': "table,spellchecker,paste,searchreplace",
+    'menubar' : True,
     'plugins': [
         'textcolor save link image media preview codesample contextmenu',
             'table code lists fullscreen  insertdatetime  nonbreaking',
@@ -199,5 +201,12 @@ TINYMCE_DEFAULT_CONFIG = {
 
     'toolbar' : ['undo redo formatselect']
 }
+
+
+
+
+
+
+
 
 

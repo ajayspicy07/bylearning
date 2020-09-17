@@ -125,7 +125,7 @@ def update_project_permission(view_function):
 
 	return wrapper_function
 
-#updation permission Profil
+#updation permission Profile
 def update_profile_permission(view_function):
 
 	def wrapper_function(request,slug,*args, **kwargs):

@@ -3,6 +3,10 @@
 {% load widget_tweaks %}
 
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" initial-scale="1.0"/>
+    <meta name="theme-color" content="blue">
+
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="{% static 'user/styles/signup.css' %}">
 </head>
@@ -11,16 +15,12 @@
     	<div class="box-container container">
         	<div class="box-logo text-center text-primary font-weight-bold">
           		<h3>
-         			<span class="dark">F</span>unny 
+         			<span class="dark">B</span>y 
          			<span class="dark">L</span>earning </h3>
         	</div>
     
-        	{% if messages %}
-        		{% for message in messages %}
-        			{{ message }}
-        		{% endfor %}
-			{% endif %}
-			
+        	
+		
     		<form method="Post" action="" class="box-form row">
 
     			{% csrf_token %}
@@ -30,7 +30,12 @@
                 		<span class="dark">n</span>ame :
               		</label>
               		{{ form.username }}
-              		{{ form.username.errors }}
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message|safe }}
+                        {% endfor %}
+                    {% endif %}
+              		
               		<p id="validate-username" class="text-white"></p>
 
 					<label for="first_name" class="box-label">
@@ -41,14 +46,14 @@
               		{{ form.first_name.errors }}
 
               		<label for="last_name" class="box-label">
-               			<span class="dark"> L</span>irst
+               			<span class="dark"> L</span>ast
                 		<span class="dark">N</span>ame :
               		</label>
               		{{ form.last_name }}
               		{{ form.last_name.errors }}
-
+ 
               		<label for="email" class="box-label">
-                		<span class="dark">e-</span>Mail :
+                		<span class="dark">e</span>-Mail :
               		</label>
               		{{ form.email }}
               		{{ form.email.errors }}
@@ -65,6 +70,7 @@
                 		<span class="dark">C</span>ollege :
               		</label>
               		{{ form.college }}
+                    
               		{{ form.college.errors }}
               		<label for="dob" class="box-label">
                			<span class="dark">D</span>ate of 

@@ -127,20 +127,75 @@
 				
 
 			</div>
-			{% if request.user.username == profile.content_object.profile_name %}
-
+			
+			{% if request.user.username == profile.content_object.profile_name or is_member or profile.content_object.admin == request.user.user  %}
+					
 				<div class="dropdown d-inline-block d-sm-block d-none  d-md-none float-right py-1 my-4 text-center">
 					<button class="btn btn-primaray dropdown-toggle bg-success text-white" type="button" id="dropdown-menu-button" data-toggle="dropdown" aria-expanded="false" aria-haspopup>
 					  Shortcuts
 					</button>
 
-					<div class="dropdown-menu " aria-labelledby="dropdown-menu-button">    
-						<a href="posts.html" class="dropdown-item list-group-item shortcuts">Go to your Posts</a>
-				
-						<a href="d" class="dropdown-item list-group-item shortcuts">Create Project</a>
-						<a href="dd" class="dropdown-item shortcuts">Create Post</a>
-						<a class="list-group-item dropdown-item shortcuts" >Create Post</a>
-						<a class="list-group-item btn shortcuts">Create Project</a>
+					<div class="dropdown-menu " aria-labelledby="dropdown-menu-button">
+					{% if profile.content_object.is_page %}
+
+						{% if	is_member or profile.content_object.admin == request.user.user %}
+
+								
+
+							<div class="">
+								
+							
+								<a href="{% url 'project:create-project' profile.slug %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">Create Project</a>
+
+								<a href="{% url 'post:create-post' profile.slug %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">Create Post</a>
+
+								<a href="{% url 'post:create-folder' profile.slug %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">Create Folder</a>
+
+							
+								<a href="{% url 'post:profile-posts' profile.slug %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">My Posts</a>
+
+								<a href="{% url 'project:profile-projects' profile.slug %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">My Projects</a>
+
+								<a href="{% url 'post:profile-folders' profile.slug  %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">My Folders</a>							    
+							</div>
+						{% endif %}
+
+					{% else %}
+
+						<div class="">
+
+
+							{% if request.user.username == profile.content_object.profile_name %}
+
+
+							<div>	
+								
+								<a href="{% url 'user:create-page'  %}" class="list-group-item p-1 float-center btn shortcuts dropdown-item text-center">Create Page</a>
+							
+								<a href="{% url 'project:create-project' request.user.username %}" class="list-group-item p-1 float-center btn shortcuts dropdown-item text-center">Create Project</a>
+								<a href="{% url 'post:create-post' request.user.username %}" class="list-group-item  float-center p-1 btn shortcuts dropdown-item text-center">Create Post</a>
+
+								<a href="{% url 'project:create-banner' %}" class="list-group-item p-1  float-center btn shortcuts dropdown-item text-center">Create Banner</a>
+								<a href="{% url 'post:create-folder' request.user.username %}" class="list-group-item p-1  float-center btn shortcuts dropdown-item text-center">Create Folder</a>
+
+							
+								
+
+							
+
+								<a href="{% url 'post:saved-posts' %}" class=" p-1 list-group-item  float-center btn shortcuts dropdown-item text-center">Saved Posts</a>
+
+								<a href="{% url 'project:saved-projects'  %}" class="list-group-item  float-center btn p-1 shortcuts dropdown-item text-center">Saved Projects</a>
+								
+							</div>	
+							
+						
+						    {% else %}
+
+
+						    {% endif %}	
+						</div>
+					{% endif %}    
 						
 					</div>
 			

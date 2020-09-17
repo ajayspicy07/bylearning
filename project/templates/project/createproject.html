@@ -23,16 +23,18 @@
 	
 			plugins: ' preview paste importcss searchreplace autolink autosave save directionality  visualblocks visualchars fullscreen image link  codesample table charmap hr pagebreak nonbreaking  toc advlist lists wordcount imagetools  noneditable  charmap anchor',
 		
-			plugin_preview_width : "400", //This do the trick
-			plugin_preview_height : "600",
+			plugin_preview_width : "700", //This do the trick
+			plugin_preview_height : "500",
 
+			menubar : true,
+            menubar: ['format'],
 	
 			toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | backcolor alignleft aligncenter alignright alignjustify | superscript subscript  | Blocks | outdent indent |  numlist bullist | forecolor backcolor table hr  removeformat | charmap | fullscreen  preview  |  image  link  anchor codesample |',
 
 			mobile : {
 				'menubar' : true,
 				'plugins' : ['autosave', 'lists', 'autolink'],
-				'toolbar' : ['undo', 'redo', 'bold','italic','indent','styleselect','bullist','numlist','image','backcolor','fullscreen','media','table']
+				'toolbar' : ['undo', 'redo', 'bold','italic','indent','styleselect','bullist','numlist','link','backcolor','fullscreen','media','table','codesample','forecolor']
 			},
 
 
@@ -166,19 +168,23 @@
 
 				var tagname = $("#add_tags_input").val();
 				//adding tags to visible list
-				var tagname_html = '<p id="added-tag" class="tags">'+tagname+'</p>'
-				var remove = '<span class="remove btn "><i class="fa fa-times"></i></span>'
-				
-				var list  = '<span>'+tagname_html+remove+'</span>'
-						   
-				$("#added-tags-list").append(list);
+				if (tagname.trim() == ""){
+                    
+                }
+                else{
+            		var tagname_html = '<p id="added-tag" class="tags">'+tagname+'</p>'
+					var remove = '<span class="remove btn "><i class="fa fa-times"></i></span>'
+					
+					var list  = '<span>'+tagname_html+remove+'</span>'
+							   
+					$("#added-tags-list").append(list);
 
 
-				//adding tags to invisible list
-				var previous_tag = $("#invisible-tags").val();
-				$("#invisible-tags").val(previous_tag +tagname+'--');
-	
-
+					//adding tags to invisible list
+					var previous_tag = $("#invisible-tags").val();
+					$("#invisible-tags").val(previous_tag +tagname+'--');
+				 }
+			
 					
 				//to disable the button 
 				if ($("#invisible-tags").val().split('--').length >= 6){

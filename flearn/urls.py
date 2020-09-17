@@ -33,7 +33,7 @@ admin.site.index_title = 'Flearn Admin'
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('special_admin/', admin.site.urls),
 
     path('tinymce/', include('tinymce.urls')),
   

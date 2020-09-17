@@ -1,7 +1,7 @@
 
 .background-box{
  
-	background: url('https://bootdey.com/img/Content/bg1.jpg') no-repeat center center fixed; 
+	background: url('../background.jpg') no-repeat center center fixed; 
 	-webkit-background-size: cover;
 	height: 100%;
 	border: 1px solid lightblue;/* don't remove */
@@ -48,7 +48,7 @@
 	color: #ffe4f9;
 }
 #id_user_mode,#id_college{
-	
+	width: 250px;
 	color :white;
 }
 #id_college,#id_user_mode{

@@ -37,7 +37,8 @@ def is_saved_project(slug,user):
 		return True
 
 	else :
-		False
+		return False
+
 
 @register.simple_tag
 def is_saved_post(slug,user):
@@ -50,7 +51,7 @@ def is_saved_post(slug,user):
 		return True
 
 	else :
-		False
+		return False
 	
 
 	
@@ -65,7 +66,7 @@ def is_liked_project(slug,user):
 		return True
 
 	else :
-		False
+		return False
 	
 
 
@@ -79,7 +80,7 @@ def is_liked_post(slug,user):
 		return True
 
 	else :
-		False
+		return False
 	
 
 

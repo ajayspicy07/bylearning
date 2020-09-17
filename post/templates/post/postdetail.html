@@ -6,13 +6,17 @@
 {% load paginate_tags %}
 
 {% block own_css %}
+	
+	
     
+    <link rel="stylesheet" type="text/css" href="{% static 'post/styles/prism.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css'%}">
+   
 {% endblock own_css %}
-
+	
 
 {% block upper_js %}
-
+	<script type="text/javascript" src="{% static 'user/js/prism.js' %}"></script>
 {% endblock upper_js %}
 
 {% block main_content %}
@@ -251,6 +255,10 @@
 
 {% block lower_js %}
 	
+
+
+
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 

@@ -25,9 +25,17 @@
 					<h5>{{ profile }}</h5>
 					<p> {{ profile.college }}</p>
 
+					{% if request.user.user == profile.content_object or request.user.user in profile.content_object.members.all or request.user.user == profile.content_object.admin %}
+					<div >
+
+						<a href="{% url 'post:create-post' profile.slug %}" class="btn btn-secondary">Create Post</a>
+
+	    			</div>
+	    			{% endif %}
+
+
 				</div>
-				
-				
+			
 			</div>
 					
 			

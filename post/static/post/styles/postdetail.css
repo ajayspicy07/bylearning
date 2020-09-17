@@ -1,4 +1,12 @@
 
+img{
+    max-width: 450px;
+    width: 100%;
+}
+pre{
+    max-width: 450px;
+    width: 100%;
+}
 .nav-below{
 	margin-top: 39px;
 	display: block;
@@ -197,6 +205,12 @@
   	    grid-template-columns: 1fr;
 	    border-radius:20px;
     
+    }
+    img{
+    	width: 100%;
+    }
+    pre{
+      width: 100vw;
     }
 }
 
