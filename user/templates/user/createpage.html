@@ -4,13 +4,21 @@
 {% load static %}
 
 
+
+
+
+{% block meta %}
+    <title> Create Page </title>
+{% endblock meta %}
+
+
 {% block own_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'user/styles/profile.css' %}">
 {% endblock own_css %}
 
 
 {% block main_content %}
-	<div class="col-md-8">
+	<div class="col-md-8 p-0">
 	    <div class="create-card  my-2 pb-2 p-4 shadow  ">
 	                    
 	                   

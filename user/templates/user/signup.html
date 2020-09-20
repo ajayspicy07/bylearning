@@ -6,7 +6,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" initial-scale="1.0"/>
     <meta name="theme-color" content="blue">
-
+    <title> Sign Up</title>
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="{% static 'user/styles/signup.css' %}">
 </head>
@@ -30,9 +30,12 @@
                 		<span class="dark">n</span>ame :
               		</label>
               		{{ form.username }}
+                    {{ form.username.errors }}
+
                     {% if messages %}
                         {% for message in messages %}
-                            {{ message|safe }}
+                           <p class="p-0 alert alert-warning" > {{ message|safe }} </p>
+                        
                         {% endfor %}
                     {% endif %}
               		

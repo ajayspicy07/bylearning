@@ -210,9 +210,16 @@ pre{
     	width: 100%;
     }
     pre{
-      width: 100vw;
+      width: 85vw;
     }
 }
+
+@media ( min-width: 990px){
+   pre{
+    width: 100vw;
+    max-width: 725px;
+   }
+ }
 
 @media ( max-width: 767px){
    .hide-small{

@@ -5,6 +5,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,JsonResponse
 from django.urls import reverse
+from django.db.models import F
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
@@ -12,6 +13,7 @@ from django.shortcuts import get_object_or_404
 
 from django.utils import timezone
 from datetime import timedelta
+
 from django.views.generic import CreateView,ListView,DetailView,UpdateView, DeleteView
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -67,11 +69,14 @@ def create_post(request, slug):
 
 def tagautocomplete(request):
 	if 'term' in request.GET:
-		qs = Tag.objects.filter(tag_name__icontains=request.GET.get('term'))[:10]
+		qs = Tag.objects.filter(
+			tag_name__icontains=request.GET.get('term')).values('tag_name')[:10]
+	
 		tags = []
-		for tag in qs:
-			tags.append(tag.tag_name)
-		
+	
+		for tag in qs :
+			tags.append(tag.get('tag_name'))
+	
 		return JsonResponse(tags,safe=False)
 
 
@@ -80,6 +85,11 @@ class posts(LoginRequiredMixin, ListView):
 	template_name = 'post/posts.html'
 	paginate_by = 10
 	ordering =[ '-date_created']
+	
+	def get_queryset(self):
+		posts = Post.objects.all().prefetch_related('tags','author')
+		return posts
+	
 
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
@@ -123,15 +133,24 @@ class detail_post(LoginRequiredMixin, DetailView):
 		slug = self.kwargs['slug']
 		
 		
-		post = get_object_or_404(Post, slug=slug)
+		post = get_object_or_404(Post.objects.prefetch_related('author','tags'), slug=slug)
 		key=post.slug
 		session = self.request.session.get(key)
 		if post.visibility == 'PUBLIC' or post.author.content_object.college == college:
 			if self.request.user.is_authenticated and self.get_ip() and not session:
-				post.views+=1
+				#post.views+=1
+				post.views = F('views')+1
 				post.save()
 				self.request.session[key]=True
-		comments = Comment.objects.filter(posts__slug= post.slug)
+
+		
+		
+		if post.comments == "ENABLE":
+			comments = Comment.objects.filter(
+				posts__slug= post.slug).prefetch_related('user','replies')
+		else: 
+			comments =[]
+	
 		context={
 			'post':post,
 			'comments': comments,
@@ -220,7 +239,7 @@ class folder(LoginRequiredMixin,ListView):
 		folder = PostDirectory.objects.get(slug=slug)
 		profile = folder.owner
 
-		posts = folder.directory.all().order_by('date_created')
+		posts = folder.directory.all().prefetch_related('author','tags').order_by('date_created')
 		
 
 		context= {
@@ -251,10 +270,10 @@ def create_post_for_folder(request, slug):
 			data = form.cleaned_data['add_tags']
 			for i in data.split('--')[:-1]:
 				try:
-					tag = Tag.objects.get(tag_name__iexact=i)
+					tag = Tag.objects.get(tag_name__iexact=i.strip())
 				except:
 					if i!=' ':
-						tag = Tag.objects.create(tag_name=i,user_create=True)
+						tag = Tag.objects.create(tag_name=i.strip(),user_create=True)
 						tag.save()
 				form.instance.tags.add(tag)
 			folder.directory.add(form.instance)
@@ -342,9 +361,9 @@ class profile_posts(LoginRequiredMixin ,ListView):
 		
 		college = self.request.user.user.college
 
-			
+		#no get_queryset, directly written here only
 		profile = Profile.objects.get(slug=slug)
-		total_posts = Post.objects.filter(author = profile)
+		total_posts = Post.objects.filter(author = profile).prefetch_related('tags','author')
 		if profile.content_object.is_page():
 			posts= total_posts.filter(Q(author__pages__college__name = college)|Q(visibility='PUBLIC')).order_by('-date_created')
 		else:
@@ -375,7 +394,8 @@ class saved_posts(LoginRequiredMixin ,ListView):
 		
 		profile = Profile.objects.get(slug=self.request.user.username)
 		ct = ContentType.objects.get_for_model(Post)
-		posts = profile.saved.filter(content_type=ct)
+		posts = profile.saved.all().filter(content_type=ct).prefetch_related(
+			'content_object__tags', 'content_object__author')
 		
 		
 		paginated_posts = Paginator(posts,self.paginate_by)
@@ -389,24 +409,6 @@ class saved_posts(LoginRequiredMixin ,ListView):
 		}
 
 		return context 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class profile_folders(LoginRequiredMixin, ListView):
@@ -448,15 +450,32 @@ class tag_posts(LoginRequiredMixin, ListView):
 	paginate_by = 10
 	ordering =[ '-date_created']
 
+	'''
+	def get_queryset(self,**kwargs):
+		#we can get kwargs into get_queryset also ,just kept this for knowledge purpose
+		slug = self.kwargs['slug']
+		tag = Tag.objects.filter(slug=slug).first()
+		
+		posts = tag.post_set.all().prefetch_related('tags','author')
+	
+		return posts
+	'''
+	
+
+
+
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
-		slug = self.kwargs['slug']
-		
 		college = self.request.user.user.college
 
-			
+		slug = self.kwargs['slug']
+		
+		#instead of writing get_queryset, doing directly	
 		tag = Tag.objects.filter(slug=slug).first()
-		total_posts = tag.post_set.all().filter(Q(visibility='PUBLIC')
+		posts = tag.post_set.all().prefetch_related('tags','author')
+		
+
+		total_posts = posts.filter(Q(visibility='PUBLIC')
 			|Q(author__pages__college__name = college)
 			|Q(author__users__college__name = college))
 		paginated_posts = Paginator(total_posts,self.paginate_by)

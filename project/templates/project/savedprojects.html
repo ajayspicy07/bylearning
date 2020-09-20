@@ -4,6 +4,14 @@
 {% load static %}
 {% load paginate_tags %}
 
+
+
+{% block meta %}
+	<title> Saved Projects </title>
+{% endblock meta %}
+
+
+
 {% block own_css %}
 
 	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
@@ -80,7 +88,7 @@
 									
 								</div>
 							
-								<a type="submit"  href="{% url 'project:detail-project' project.content_object.slug %}" class="btn btn-outline-info">See Full project</a>
+								<a   href="{% url 'project:detail-project' project.content_object.slug %}" class="btn btn-outline-info">See Full project</a>
 						
 							
 							</div>

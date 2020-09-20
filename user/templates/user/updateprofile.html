@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
 {% load bootstrap %}
 {% load static %}
-
 {% load widget_tweaks %}
+
+
+
+
+{% block meta %}
+    <title> Update Profile </title>
+{% endblock meta %}
+
 
 {% block own_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'user/styles/profile.css' %}">
@@ -60,7 +67,14 @@
 
                 {% else %}
                      <label for="email"> Email :</label>
-                    {% render_field unique_form.email class="form-control" id="email" %}
+                    {% render_field unique_form.email class="form-control" id="email" required="true" %}
+
+                    {% if messages %}
+                        {% for message in messages %}
+                           <p class="p-0 alert alert-warning" > {{ message|safe }} </p>
+                        
+                        {% endfor %}
+                    {% endif %}
                
                 {% endif %}
                 {{ profile_form|bootstrap }}

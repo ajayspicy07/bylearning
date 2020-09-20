@@ -3,6 +3,17 @@
 {% load widget_tweaks %}
 {% load static %}
 
+
+
+{% block meta %}
+	<title> Create Project </title>
+{% endblock meta %}
+
+
+
+
+
+
 {% block own_css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/createpost.css' %}">
 
@@ -80,7 +91,7 @@
 						<h5> {{ profile }}</h5>
 						<p class="p-0 m-0">comments </p>
 						{% render_field form.comments class="form-control p-sm-0" %}
-						<p class="p-0 m-0"> Post Visibility </p>
+						<p class="p-0 m-0"> Project Visibility </p>
 						{% render_field form.visibility class="form-control p-sm-0" %}
 						
 					</div>
@@ -109,13 +120,15 @@
 				</div>
 				<div id="added-tags-list" class="py-2">
 				</div>
+				<p id="tag-error" class="bg-warning text-danger font-weight-bold px-2"></p>
+				
 				
 
 
 				{{ form.media }}
 
 				
-				<button class="btn btn-primary mt-3">Create Project</button>
+				<button class="btn btn-primary mt-3" id="project-submit">Create Project</button>
 
 			</form>
 
@@ -152,7 +165,13 @@
 			}
 			
 
-
+			//checking the total tags
+		    $('#project-submit').on('click',function(){
+		   		var length = $('#added-tags-list').children().length;
+		   		if (length == 0){
+		   			$('#tag-error').text('Please add atleast one tag');
+		   		}
+		    })
 		   
 		   
 
@@ -178,7 +197,7 @@
 					var list  = '<span>'+tagname_html+remove+'</span>'
 							   
 					$("#added-tags-list").append(list);
-
+					$('#tag-error').text('');
 
 					//adding tags to invisible list
 					var previous_tag = $("#invisible-tags").val();

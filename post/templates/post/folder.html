@@ -4,6 +4,12 @@
 {% load static %}
 {% load paginate_tags %}
 
+{% block meta %}
+	<title> Folder : {{ folder }} </title>
+{% endblock meta %}
+
+
+
 {% block own_css %}
 
 	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
@@ -21,20 +27,23 @@
 					<img src="{{ profile.image.url }}" 
 					class="rounded-circle ml-2 ml-lg-4 p-1 profile-img">
 					<div class="mt-lg-5 ">
-						<h4>Folder Name</h4>
-						<p> {{ folder }}</p>
-						<p> Date Created : {{ folder.date_created|date:"jS b, Y" }} </p>
-						<h6>
-						<a  href="{% url 'user:profile' profile.slug %}" style="text-decoration: none;">{{ profile }}</a>
-						</h6>
-						<p> {{ profile.college }}</p>
+						<h5>
 
+							<a  href="{% url 'user:profile' profile.slug %}" style="text-decoration: none;">{{ profile }}</a>
+						</h5>
+						<h6>Folder Name</h6>
+						<p class="font-italic font-weight-bold"> {{ folder }}</p>
+						<p class="font-italic text-secondary"> {{ folder.description }} </p>
+						<p> Date Created : {{ folder.date_created|date:"jS b, Y" }} </p>
+						
+					
+						
 					{% if request.user.user == profile.content_object or request.user.user in profile.content_object.members.all or request.user.user == profile.content_object.admin %}
 						<div >
 
 
 
-							<a type="submit" href="{% url 'post:create-post-folder' folder.slug %}" class="btn btn-secondary">Add Post</a>
+							<a  href="{% url 'post:create-post-folder' folder.slug %}" class="btn btn-secondary">Add Post</a>
 							        	
 							
 						
@@ -113,7 +122,7 @@
 										<p><i class="fa fa-eye"></i> {{post.views }} views 
 											<i class="fa fa-sign-language"></i> {{ post.likes }} appreciations
 										</p>
-										<p> {{ post.author.college }} </p>
+										<p> {{ profile.college }} </p>
 										<div class="article-tags">
 											{% for tag in post.tags.all %}
 											<a href="" class="tags">{{ tag }} </a>
@@ -129,7 +138,7 @@
 										
 									</div>
 								
-									<a type="submit"  href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
+									<a   href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
 							
 								
 								</div>

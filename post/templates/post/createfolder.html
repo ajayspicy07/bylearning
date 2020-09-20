@@ -3,6 +3,10 @@
 {% load widget_tweaks %}
 {% load static %}
 
+{% block meta %}
+	<title> Create Folder </title>
+{% endblock meta %}
+
 
 {% block own_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'post/styles/createpost.css' %}">
@@ -10,7 +14,7 @@
 
 
 {% block main_content %}
-	<div class="col-md-8">
+	<div class="col-md-8 p-0">
 	    <div class="profile-card  my-2 pb-2 p-4 shadow  ">
 	                    
 	        
@@ -21,12 +25,16 @@
 	        {% csrf_token %}
 
 
-	        <label for="page_name "> Folder Name</label>
+	        <label for="folder_name "> Folder Name</label>
 	        
 	        {% render_field form.name class="form-control my-2" id="folder_name" %}
 
-	        <p> Visibility </p> 
-	        {% render_field form.visibility class="form-control my-2" id="folder_name" %}
+	        <label for="description"> Description </label>
+
+	        {% render_field form.description class="form-control my-2" id="description" placeholder="Write, what this folder consists of?" type="textarea" required="true" %}
+
+	        <label for="visibility"> Visibility </label>
+	        {% render_field form.visibility class="form-control my-2" id="visibility" %}
 	                   
 
 	        <button class="btn btn-primary">Create Folder</button>

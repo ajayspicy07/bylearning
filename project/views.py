@@ -5,6 +5,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,JsonResponse
 from django.urls import reverse
+from django.db.models import F
 
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -71,6 +72,11 @@ class project(LoginRequiredMixin, ListView):
 	paginate_by = 10
 	ordering =[ '-date_created']
 
+	def get_queryset(self):
+		projects = Project.objects.all().prefetch_related('tags','author')
+		return projects
+	
+
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
 		college = self.request.user.user.college
@@ -109,15 +115,25 @@ class detail_project(LoginRequiredMixin, DetailView):
 		college = self.request.user.user.college
 		slug = self.kwargs['slug']
 		
-		project=Project.objects.get(slug=slug)
+		#project=Project.objects.get(slug=slug)
+		project = get_object_or_404(Project.objects.prefetch_related(
+				'author','tags'), slug=slug)
+		
 		key=project.slug
 		session = self.request.session.get(key)
 		if project.visibility == 'PUBLIC' or project.author.content_object.college == college:
 			if self.request.user.is_authenticated and self.get_ip() and not session:
-				project.views+=1
+				#project.views+=1
+				project.views = F('views')+1
 				project.save()
 				self.request.session[key]=True
-		comments = Comment.objects.filter(projects__slug= project.slug)
+
+		#comments = Comment.objects.filter(projects__slug= project.slug)
+		if project.comments == "ENABLE":
+			comments = Comment.objects.filter(
+				projects__slug= project.slug).prefetch_related('user','replies')
+		else: 
+			comments =[]
 
 		context={
 			'project':project,
@@ -157,7 +173,7 @@ class delete_project(LoginRequiredMixin, UserPassesTestMixin ,DeleteView):
 			if user in project.author.content_object.members.all() or user == project.author.content_object.admin:
 				return True
 		else:
-			if profile == post.author:
+			if profile == project.author:
 				return True
 		return False
 
@@ -199,9 +215,11 @@ class banner(LoginRequiredMixin,DetailView):
 		college = self.request.user.user.college
 
 			
-		banner = ProjectBanner.objects.get(slug=slug)
+		#banner = ProjectBanner.objects.get(slug=slug)
+		banner = get_object_or_404(ProjectBanner , slug= slug)
 		profile = banner.owner
-		comments = Comment.objects.filter(projectsbanner__slug= banner.slug)
+		comments = Comment.objects.filter(
+			projectsbanner__slug= banner.slug).prefetch_related('replies','user')
 
 
 		
@@ -226,7 +244,9 @@ class delete_banner(LoginRequiredMixin, UserPassesTestMixin ,DeleteView):
 	
 	def get_success_url(self):
 		slug = self.kwargs['slug']
-		banner = ProjectBanner.objects.get(slug=slug)
+		#banner = ProjectBanner.objects.get(slug=slug)
+		banner = get_object_or_404(ProjectBanner , slug= slug)
+		
 		
 		return reverse('user:home')
 
@@ -291,7 +311,7 @@ class profile_projects(LoginRequiredMixin ,ListView):
 
 			
 		profile = Profile.objects.get(slug=slug)
-		total_projects = Project.objects.filter(author = profile)
+		total_projects = Project.objects.filter(author = profile).prefetch_related('tags','author')
 		if profile.content_object.is_page():
 			projects= total_projects.filter(Q(author__pages__college__name = college)|Q(visibility='PUBLIC')).order_by('-date_created')
 		else:
@@ -321,7 +341,8 @@ class saved_projects(LoginRequiredMixin ,ListView):
 		
 		profile = Profile.objects.get(slug=self.request.user.username)
 		ct = ContentType.objects.get_for_model(Project)
-		projects = profile.saved.filter(content_type=ct)
+		projects = profile.saved.filter(content_type=ct).prefetch_related(
+			'content_object__tags', 'content_object__author')
 		
 		
 		paginated_projects = Paginator(projects,self.paginate_by)
@@ -357,11 +378,11 @@ class tag_projects(LoginRequiredMixin, ListView):
 		context = super().get_context_data(**kwargs)
 		slug = self.kwargs['slug']
 		
-		college = self.request.user.user.college
-
-			
+		college = self.request.user.user.college	
 		tag = Tag.objects.get(slug=slug)
-		total_projects = tag.project_set.all().filter(Q(visibility='PUBLIC')
+		projects = tag.project_set.all().prefetch_related('tags','author')
+		
+		total_projects = projects.filter(Q(visibility='PUBLIC')
 			|Q(author__pages__college__name = college)
 			|Q(author__users__college__name = college))
 		

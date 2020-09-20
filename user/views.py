@@ -50,14 +50,20 @@ def signup(request):
 		form = UserRegistrationForm(request.POST)
 		if form.is_valid():
 			username = form.cleaned_data['username']
-			
-			if  '.' in username or '@' in username or '_' in username or '--' in username or '-' == username[-1]:
+			email = form.cleaned_data['email']
+			print(email)
+			if  ('.' in username or '@' in username or '_' in username
+			 	or ' ' in username or '--' in username or '-' == username[-1]):
 				messages.error(request, 'Check Username?')
+				pass
+			elif User.objects.filter(email__iexact=email).exists():
+				messages.error(request, 'User with that email already exists,')
 				pass
 			else:
 				form.save()
 				username = form.cleaned_data['username']
 				password = form.cleaned_data['password1']
+				
 				user = auth.authenticate(username=custom_slugify(username), password=password)
 			
 				auth.login(request,user)
@@ -74,10 +80,12 @@ def validate_username(request):
 		'is_taken': User.objects.filter(username__iexact=username).exists()
 	}
 	
+	
 	if data['is_taken']:
 		message='User with that username already exists'
-	
-	elif '.' in username or '@' in username or '_' in username or '--' in username or '-' == username[-1]:
+	 
+	elif ( '.' in username or '@' in username or '_' in username 
+			 or '--' in username or ' ' in username or '-' == username[-1]):
 		message = 'Invalid Username'
 	
 	else:
@@ -135,10 +143,10 @@ def profile(request,slug):
 		is_followed= False
 
 	posts = profile.posts.filter(Q(author__users__college__name = college)
-		|Q(visibility='PUBLIC')|Q(author__pages__college__name=college))[:5]
+		|Q(visibility='PUBLIC')|Q(author__pages__college__name=college)).prefetch_related('tags','author')[:5]
 
 	projects = profile.projects.filter(Q(author__users__college__name = college)
-		|Q(visibility='PUBLIC')|Q(author__pages__college__name=college))[:5]
+		|Q(visibility='PUBLIC')|Q(author__pages__college__name=college)).prefetch_related('tags','author')[:5]
 
 	folders = profile.folders.filter(Q(owner__users__college=college)
 		|Q(visibility = 'PUBLIC')|Q(owner__pages__college__name=college))[:5]
@@ -176,6 +184,9 @@ def profile(request,slug):
 	return render(request,'user/profile.html', context)
 
 
+	
+
+
 @login_required
 @update_profile_permission
 def update_profile(request, slug):
@@ -194,23 +205,31 @@ def update_profile(request, slug):
 		
 		 
 		if profile_form.is_valid() and unique_form.is_valid():
-			
-			profile_form.save()
-			
-			if profile.content_object.is_page():
-				members = unique_form.cleaned_data['add_members']
-				page_name = unique_form.cleaned_data['name']
-     
+			email = unique_form.cleaned_data['email'].strip()
+
+
+			if request.user.user.email != email and User.objects.filter(email__iexact=email).exists():
+				messages.error(request, 'User with that email already exists,')
+				pass
+			else:
+				
+				profile_form.save()
+				
+				if profile.content_object.is_page():
+					members = unique_form.cleaned_data['add_members']
+					page_name = unique_form.cleaned_data['name']
+
+	     
+					unique_form.save()
+					unique_form.instance.members.clear()
+					for member in members.split('--')[:-1]:
+						user = User.objects.get(username__iexact=member)
+						unique_form.instance.members.add(user.id)
+					profile.slug= custom_slugify(page_name)+'-'+str(unique_form.instance.id)
+
 				unique_form.save()
-				unique_form.instance.members.clear()
-				for member in members.split('--')[:-1]:
-					user = User.objects.get(username__iexact=member)
-					unique_form.instance.members.add(user.id)
-				profile.slug= custom_slugify(page_name)+'-'+str(unique_form.instance.id)
 
-			unique_form.save()
-
-			return redirect('user:profile',slug=profile.slug)
+				return redirect('user:profile',slug=profile.slug)
 		
 	else:
 		profile_form = ProfileUpdateForm(instance=profile)

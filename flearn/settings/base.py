@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'tinymce',
     'widget_tweaks',
     'storages',
+    'debug_toolbar',
 
 
     'user.apps.UserConfig',
@@ -63,6 +64,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    #external middleware
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -199,10 +203,10 @@ TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
 
-    'toolbar' : ['undo redo formatselect']
+    'toolbar' : ['undo redo formatselect forecolor backcolor']
 }
 
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
 
 
 

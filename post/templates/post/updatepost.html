@@ -3,6 +3,14 @@
 {% load widget_tweaks %}
 {% load static %}
 
+
+
+{% block meta %}
+    <title> Update Post </title>
+{% endblock meta %}
+
+
+
 {% block own_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'post/styles/createpost.css' %}">
 
@@ -112,12 +120,12 @@
                 <div id="added-tags-list" class="py-2">
                 </div>
                 
-
+                <p id="tag-error" class="bg-warning text-danger font-weight-bold px-2"></p>
 
                 {{ form.media }}
 
                 
-                <button class="btn btn-primary mt-3">Update Post</button>
+                <button class="btn btn-primary mt-3" id="post-submit">Update Post</button>
 
             </form>
 
@@ -161,7 +169,14 @@
         
             };
 
-            
+             //checking the total tags
+            $('#post-submit').on('click',function(){
+                var length = $('#added-tags-list').children().length;
+                if (length == 0){
+                    $('#tag-error').text('Please add atleast one tag');
+                }
+            })
+
             //auto complete tags
             $( "#add_tags_input" ).autocomplete({
              source: "{% url 'post:tag-auto-complete' %}",
@@ -183,6 +198,7 @@
                     var list  = '<span>'+tagname_html+remove+'</span>'
                                
                     $("#added-tags-list").append(list);
+                    $('#tag-error').text('');
 
 
                     //adding tags to invisible list

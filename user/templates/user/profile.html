@@ -3,6 +3,14 @@
 {% load paginate_tags %}
 
 
+
+
+{% block meta %}
+    <title> {{ profile }} </title>
+{% endblock meta %}
+
+
+
 {% block own_css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'user/styles/profile.css' %}">
 
@@ -301,80 +309,18 @@
 						 <a class="float-right mx-2 d-none d-md-block" href="{% url 'post:folder' folder.slug %}"> Open Folder
 						 </a>
 						<div id="list{{ forloop.counter }}" class="collapse bg-info p-1">
-							<div class="py-1 my-1 post-list">
-							{% if folder.directory.all %}
-								{%  for post in folder.directory.all %} 
-									<article class="media content-section-main ">
-										<div class="media-body border p-3">
-										
-											<h4 class="article-title-border pb-2">
-												<a href="{% url 'post:detail-post' post.slug %}" class="article-title ">
-												{{ post.title }}
-												</a>
-												
-											
-												{%  is_saved_post post.slug request.user.username as is_saved_flag %}
-
-												{% if is_saved_flag %}
-													<i class="save-post fa float-right fa-bookmark text-success" id="{{ post.slug }}"></i>
-												
-												{% else %}
-													<i class="save-post far float-right fa-bookmark bg-white" id="{{ post.slug }}"></i>
-												
-												{% endif %}
-										
-											</h4>
-											<small class="float-right saved-alert text-primary bg-light"></small>
-										
-											
-										
-											<div class="article-metadata pb-2">
-												<div>
-													
-													
-													<p class="text-muted float-right"> 
-													{{  post.date_created|date:"jS b, Y" }}</p>
-												</div>
-												<p><i class="fa fa-eye"></i> {{post.views }} views 
-													<i class="fa fa-sign-language"></i> {{ post.likes }} appreciations
-												</p>
-												<p> {{ post.author.college }} </p>
-												<div class="article-tags">
-													{% for tag in post.tags.all %}
-													<a href="{% url 'post:tag-posts' tag.slug %}" class="tags">{{ tag }} </a>
-													{% endfor %}
-												</div>
-											</div>
-
-											
-									
-
-											<div class="article-content text-muted">
-												<p> {{ post.description|truncatechars:500 }} </p>
-												
-											</div>
-										
-											<a type="submit"  href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
-									
-										
-										</div>
-										
-									</article>
-								
-								{% endfor %}
-							{% else %}
-								<h6 class="text-white"> No Posts yet</h6>
-							{% endif %}
-						
 							
-							</div>
+							
+						<h6 class="text-white"> {{ folder.description }} </h6>
+							
+						</div>
 											
 
-						</div>
+					</div>
 
 
 					
-					</div>
+					
 				
 				{% endfor %}
 			</div>

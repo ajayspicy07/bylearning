@@ -24,6 +24,7 @@ urlpatterns = [
 
     path('search/', views.search_post_projects, name = 'search-post-project'),
 
+   
     path('p/<slug:slug>/', views.profile, name= "profile"),
     path('p/<slug:slug>/update-profile', views.update_profile, name= "update-profile"),
 

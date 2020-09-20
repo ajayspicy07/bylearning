@@ -4,6 +4,14 @@
 {% load static %}
 {% load paginate_tags %}
 
+
+{% block meta %}
+	<title> {{ profile }}'s projects </title>
+{% endblock meta %}
+
+
+
+
 {% block own_css %}
 
 	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
@@ -77,13 +85,14 @@
 									<p><i class="fa fa-eye"></i> {{project.views }} views 
 										<i class="fa fa-sign-language"></i> {{ project.likes }} appreciations
 									</p>
-									<p> {{ project.author.college }} </p>
+									<p> {{ profile.college }} </p>
 									<div class="article-tags">
 										{% for tag in project.tags.all %}
-										<a href="" class="tags-looklike">{{ tag }} </a>
+										<a href="{% url 'project:tag-projects' tag.slug %}" class="tags">{{ tag }} </a>
 										{% endfor %}
 									</div>
 								</div>
+								
 
 								
 						
@@ -93,7 +102,7 @@
 									
 								</div>
 							
-								<a type="submit"  href="{% url 'project:detail-project' project.slug %}" class="btn btn-outline-info">See Full project</a>
+								<a  href="{% url 'project:detail-project' project.slug %}" class="btn btn-outline-info">See Full project</a>
 						
 							
 							</div>

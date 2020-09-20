@@ -52,11 +52,15 @@ class PostUpdationForm(forms.ModelForm):
      
 
 class FolderCreationForm(forms.ModelForm):
-
+	#description = forms.CharField(widget=forms.TextInput())
+	description = forms.CharField(required=False, widget=forms.Textarea(attrs=
+		{ 'rows':4, 'cols':6 }))
+	
 	class Meta :
 		model = PostDirectory
 		fields =(
 				'name',
+				'description',
 				'visibility',
 			)
 

@@ -2,8 +2,15 @@
 {% load bootstrap %}
 {% load widget_tweaks %}
 {% load static %}
-
 {% load paginate_tags %}
+
+
+{% block meta %}
+	<title> {{ post.title }} </title>
+{% endblock meta %}
+
+
+
 
 {% block own_css %}
 	
@@ -277,55 +284,60 @@
 			
 				var question = $('#comment-question').val();
 				
+				if (question.trim() == ""){
+                    //do nothing 
+                }
+                else{
+					event.preventDefault();
 
-				event.preventDefault();
-
-				$.ajax({
-					
-					url: "{% url 'comment:create-comment'  slug=post.slug model_type='posts'  %}",
-
-					data :{
-   						'question':question
-   					},
-
-	   				
-	   				
-					success: function(profile_list){
-
-							
-							var name = profile_list.name;
-							var image = profile_list.image;
-							var slug = profile_list.slug;
-
-							var comment = profile_list.comment;
-							var id = profile_list.id;
-							
-							var image_html= '<img style="width:40px; height:40px;" class="rounded-circle"  src="'+image+'" />'
-							
-							
-							var name_html = '<a href="/p/'+slug+'" style="text-decoration: none; ">'+ name +'</a>'
-
-							var delete_html = '<button class="my-2 float-right border-0 btn btn-outline-info delete-comment" name="'+id+'">'+'<i class="fa  fa-trash float-right my-2 px-2"></i> </button>'
-							var comment_html = '<p class="px-2">'+comment+'</p>'
-
-							var reply_box= '<textarea rows="2" class="form-control reply-text" id="reply-text" style="display: none;"> </textarea>' + '<button class="btn btn-outline-primary mt-1 px-1 py-0 mx-1 reply" type="submit" id="'+id+'" > reply </button>'
-
-							var first_div = '<div>'+image_html+name_html+delete_html+'</div>'
-							var second_div = '<div class=" rounded-top mx-lg-4">'+comment_html+'<div class=" px-2  py-2 my-2">'+reply_box+'</div>'+'</div>'
-
-							var comment = '<div id="comment-id-'+id+'" class="individual-comment">'+first_div+second_div+'</div>'
-
-							
-
-							$("#added-comments").prepend(comment);
-							$('#comment-question').val('');
-							
-							
+					$.ajax({
 						
+						url: "{% url 'comment:create-comment'  slug=post.slug model_type='posts'  %}",
 
-					}
-	   			
-				});
+						data :{
+	   						'question':question
+	   					},
+
+		   				
+		   				
+						success: function(profile_list){
+
+								
+								var name = profile_list.name;
+								var image = profile_list.image;
+								var slug = profile_list.slug;
+
+								var comment = profile_list.comment;
+								var id = profile_list.id;
+								
+								var image_html= '<img style="width:40px; height:40px;" class="rounded-circle"  src="'+image+'" />'
+								
+								
+								var name_html = '<a href="/p/'+slug+'" style="text-decoration: none; ">'+ name +'</a>'
+
+								var delete_html = '<button class="my-2 float-right border-0 btn btn-outline-info delete-comment" name="'+id+'">'+'<i class="fa  fa-trash float-right my-2 px-2"></i> </button>'
+								var comment_html = '<p class="px-2">'+comment+'</p>'
+
+								var reply_box= '<textarea rows="2" class="form-control reply-text" id="reply-text" style="display: none;"> </textarea>' + '<button class="btn btn-outline-primary mt-1 px-1 py-0 mx-1 reply" type="submit" id="'+id+'" > reply </button>'
+
+								var first_div = '<div>'+image_html+name_html+delete_html+'</div>'
+								var second_div = '<div class=" rounded-top mx-lg-4">'+comment_html+'<div class=" px-2  py-2 my-2">'+reply_box+'</div>'+'</div>'
+
+								var comment = '<div id="comment-id-'+id+'" class="individual-comment">'+first_div+second_div+'</div>'
+
+								
+
+								$("#added-comments").prepend(comment);
+								$('#comment-question').val('');
+								
+								
+							
+
+						}
+		   			
+					});
+				}
+				$('#comment-question').val('');
 			return false;
 			});
 
@@ -364,26 +376,32 @@
 				var comment_id = $(this).attr('id');
 				var reply = $(this).siblings('textarea').val();
 				
+				if (reply.trim() == ""){
+                    //do nothing 
+                }
+                else{
 
-				event.preventDefault();
-				$.ajax({
-	
-					url: "{% url 'comment:create-reply'  %}",
-
-					data :{
-					'id': comment_id,
-					'reply' : reply
-					},
-
+					event.preventDefault();
+					$.ajax({
 		
-		
-					success: function(profile_list){
-						location.reload();
-		
+						url: "{% url 'comment:create-reply'  %}",
 
-					}
-	   			
-				});
+						data :{
+						'id': comment_id,
+						'reply' : reply
+						},
+
+			
+			
+						success: function(profile_list){
+							location.reload();
+			
+
+						}
+		   			
+					});
+				}
+				$(this).siblings('textarea').val();
 
 
 				

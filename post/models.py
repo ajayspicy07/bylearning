@@ -135,6 +135,7 @@ class Post(BasePost):
 ''' Post directory '''
 class PostDirectory(BaseFolder):
 	owner = models.ForeignKey(Profile,on_delete=models.CASCADE, related_name='folders')
+	description = models.TextField(blank=True)
 	directory = models.ManyToManyField(Post,blank=True,)
 
 	class Meta:

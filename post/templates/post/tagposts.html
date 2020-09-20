@@ -4,6 +4,15 @@
 {% load static %}
 {% load paginate_tags %}
 
+
+
+
+
+{% block meta %}
+	<title> Posts : {{ tag }} </title>
+{% endblock meta %}
+
+
 {% block own_css %}
 
 	<link rel="stylesheet" type="text/css" href="{% static 'post/styles/postdetail.css' %}">      
@@ -79,7 +88,7 @@
 									
 								</div>
 							
-								<a type="submit"  href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
+								<a   href="{% url 'post:detail-post' post.slug %}" class="btn btn-outline-info">See Full Post</a>
 						
 							
 							</div>
