@@ -6,7 +6,7 @@ from flearn.settings.base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.bylearning.in', 'bylearning.in', '148.66.128.241']
+ALLOWED_HOSTS = ['www.bylearning.in', 'bylearning.in', 'ip address']
 
 #
 DATABASES = {
@@ -19,9 +19,9 @@ DATABASES = {
 
         'USER': 'bylearner',
 
-        'PASSWORD': 'SpicyAjay07',
+        'PASSWORD': '',
 
-        'HOST': 'bylearning.cl450suinxyr.ap-south-1.rds.amazonaws.com',
+        'HOST': '',
 
         'PORT': '5432',
 
@@ -37,7 +37,7 @@ EMAIL_HOST   = 'smtp.gmail.com'
 EMAIL_PORT  = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bylearning.official@gmail.com'
-EMAIL_HOST_PASSWORD = 'Ajay@1999'
+EMAIL_HOST_PASSWORD = ' '
 
 
 
@@ -47,8 +47,8 @@ EMAIL_HOST_PASSWORD = 'Ajay@1999'
 
 
 #S3 BUCKET SETTINGS HAVE TO MAINTAIN IN SECRET
-AWS_ACCESS_KEY_ID = 'AKIAUZXFN2GUF5WJ5SVP'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ' '
+AWS_SECRET_ACCESS_KEY = ' '
 AWS_STORAGE_BUCKET_NAME = 'bylearning-media-files'
 
 AWS_S3_FILE_OVERWRITE = False
